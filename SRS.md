@@ -31,9 +31,9 @@ Mục tiêu chính là hiểu được **Business Context** – tức là **ng�
 - **Hệ thống cần giải quyết vấn đề nào?** Tự động hóa việc tìm và phân công tài xế, tập trung hóa quản lý thanh toán, cung cấp khả năng theo dõi chuyến đi theo thời gian thực, đảm bảo hệ thống có thể mở rộng độc lập theo module (kiến trúc modular/microservices) và không bị sập toàn bộ khi một thành phần (thanh toán, thông báo) gặp lỗi.
 - **Kết quả mong muốn (To-Be) của khách hàng là gì?** Một nền tảng CAB hoàn chỉnh, đáp ứng toàn bộ quy trình từ tạo yêu cầu → tìm/phân công tài xế → thực hiện chuyến → tính cước → thanh toán → thông báo → đánh giá sau chuyến, có khả năng mở rộng linh hoạt (thêm dịch vụ, phương thức thanh toán, kênh thông báo) và đảm bảo bảo mật, ổn định khi vận hành ở quy mô lớn.
   
-### Bước 2: Xác định các Stakeholders
+## 2. Xác định các Stakeholders
 
-#### 2.1. Danh sách Stakeholders
+### 2.1. Danh sách Stakeholders
 
 | Tên Stakeholders | Vai trò |
 |---|---|
@@ -49,7 +49,7 @@ Mục tiêu chính là hiểu được **Business Context** – tức là **ng�
 | **Dịch vụ bản đồ / định vị (Map & Location Service)** | Cung cấp dữ liệu bản đồ, vị trí, khoảng cách và hỗ trợ tính toán lộ trình. |
 | **Dịch vụ thông báo (Notification Service)** | Gửi thông báo đến khách hàng và tài xế thông qua các kênh như SMS, Email hoặc Push Notification. |
 
-#### 2.2. Stakeholder Matrix
+### 2.2. Stakeholder Matrix
 
 Stakeholder Matrix giúp xác định **mức độ ảnh hưởng (Power)** và **mức độ quan tâm (Interest)** của từng stakeholder đối với hệ thống.
 
@@ -73,4 +73,3 @@ quadrantChart
     "Payment Gateway": [0.35, 0.45]
     "Map Service": [0.30, 0.35]
     "Notification Service": [0.25, 0.30]
-...
