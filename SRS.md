@@ -188,8 +188,6 @@ Các chức năng sau **không được đề cập trong yêu cầu hiện tạ
 | **O08** | Phân tích dữ liệu nâng cao / AI dự đoán                      | Không được yêu cầu trong phạm vi hiện tại.                                                   |
 | **O09** | Ứng dụng riêng cho bộ phận quản trị ngoài giao diện quản trị | Chưa có yêu cầu xây dựng ứng dụng riêng; hệ thống chỉ yêu cầu giao diện quản trị.            |
 
-> **Lưu ý:** Out of Scope ở đây được xác định dựa trên yêu cầu hiện tại. Các chức năng chưa được đề cập không nên tự động đưa vào phạm vi phát triển. Nếu khách hàng phát sinh yêu cầu mới, BA cần thực hiện đánh giá và quản lý thay đổi phạm vi.
-
 ---
 
 ## 4.4. Future Scope – Khả năng mở rộng trong tương lai
