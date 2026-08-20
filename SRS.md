@@ -247,8 +247,202 @@ Mỗi BR được đặt mã theo quy tắc: **BR + số thứ tự 2 chữ số
 | **BR21** | Kiến trúc mở rộng linh hoạt | Hệ thống phải có khả năng mở rộng độc lập theo tải, triển khai từng phần và bổ sung dịch vụ mới, phương thức thanh toán mới, kênh thông báo mới mà không cần xây dựng lại toàn bộ. |
 
 ---
+#### Bước 6: Xây dựng Business Process (Quy trình nghiệp vụ)
 
-## 3. Ghi chú
+Từ danh sách Business Requirements (BR01–BR37) đã xác nhận với khách hàng ở Bước 5, tiến hành mô hình hóa thành các **Business Process (BP)** — mô tả luồng thực hiện từng bước, bao gồm cả **luồng chính (Main Flow)**, **luồng phụ (Alternative Flow)** và **luồng ngoại lệ (Exception Flow)**. Mỗi BP là cơ sở để thiết kế Use Case chi tiết ở bước sau.
+
+---
+
+##### BP01 – Đặt chuyến (Booking Trip)
+
+**Mục tiêu:** Khách hàng tạo yêu cầu đặt xe và được ghép với tài xế phù hợp.
+**BR liên quan:** BR11, BR12, BR13, BR14, BR15, BR16
+
+**Luồng chính (Main Flow):**
+1. Khách hàng đăng nhập vào hệ thống.
+2. Khách hàng nhập điểm đón và điểm đến.
+3. Khách hàng chọn loại xe/dịch vụ.
+4. Khách hàng xác nhận gửi yêu cầu đặt xe.
+5. Hệ thống tiếp nhận yêu cầu và gửi thông báo xác nhận cho khách hàng.
+6. Hệ thống tìm kiếm tài xế phù hợp dựa trên vị trí và trạng thái sẵn sàng (→ BP02).
+7. Tài xế chấp nhận chuyến.
+8. Hệ thống thông báo cho khách hàng: tài xế đã nhận chuyến, thông tin tài xế, thời gian dự kiến đến.
+9. Chuyến đi chuyển sang trạng thái "đang chờ tài xế đến điểm đón" (→ BP03).
+
+**Luồng phụ (Alternative Flow):**
+- 7a. Tài xế từ chối hoặc không phản hồi trong thời gian quy định → hệ thống tự động tìm tài xế kế tiếp (lặp lại bước 6–7), khách hàng **không cần** tạo lại yêu cầu.
+
+**Luồng ngoại lệ (Exception Flow):**
+- 6a. Không tìm được tài xế phù hợp sau nhiều lần thử → hệ thống thông báo rõ cho khách hàng là không tìm được tài xế, kết thúc quy trình.
+- 4a. Khách hàng hủy yêu cầu trước khi có tài xế nhận → hệ thống hủy yêu cầu, không phát sinh chi phí.
+
+---
+
+##### BP02 – Điều phối & Tìm tài xế (Dispatch/Matching)
+
+**Mục tiêu:** Ghép tài xế phù hợp nhất cho một yêu cầu đặt xe.
+**BR liên quan:** BR12, BR13, BR14, BR15
+
+**Luồng chính:**
+1. Hệ thống nhận yêu cầu đặt xe từ BP01.
+2. Hệ thống xác định danh sách tài xế đang ở trạng thái sẵn sàng, gần vị trí khách hàng.
+3. Hệ thống chọn tài xế phù hợp nhất theo tiêu chí ưu tiên (khoảng cách, trạng thái...).
+4. Hệ thống gửi thông báo đề xuất chuyến đến tài xế được chọn.
+5. Tài xế phản hồi (chấp nhận/từ chối) trong thời gian quy định.
+6. Nếu chấp nhận → hệ thống cập nhật trạng thái chuyến là "đã có tài xế", kết thúc quy trình, quay lại BP01 bước 8.
+
+**Luồng phụ:**
+- 5a. Tài xế từ chối → hệ thống loại tài xế này khỏi danh sách đề xuất cho chuyến hiện tại, quay lại bước 3 với tài xế kế tiếp.
+- 5b. Tài xế không phản hồi trong thời gian quy định (timeout) → hệ thống tự động loại và quay lại bước 3.
+
+**Luồng ngoại lệ:**
+- 2a. Không còn tài xế nào sẵn sàng trong khu vực → chuyển sang BP01 – Exception (thông báo không tìm được tài xế).
+
+---
+
+##### BP03 – Thực hiện chuyến đi (Trip Execution)
+
+**Mục tiêu:** Theo dõi và cập nhật hành trình chuyến đi từ khi tài xế nhận cho đến khi hoàn thành.
+**BR liên quan:** BR16, BR17
+
+**Luồng chính:**
+1. Tài xế di chuyển đến điểm đón.
+2. Tài xế cập nhật trạng thái "đã đến điểm đón".
+3. Hệ thống thông báo cho khách hàng tài xế đã đến.
+4. Tài xế cập nhật trạng thái "đã đón khách".
+5. Tài xế cập nhật trạng thái "đang di chuyển".
+6. Khách hàng theo dõi hành trình theo thời gian thực trong suốt chuyến đi.
+7. Tài xế đến điểm trả khách, cập nhật trạng thái "hoàn thành chuyến".
+8. Hệ thống chuyển sang quy trình tính cước và thanh toán (→ BP04).
+
+**Luồng phụ:**
+- 1a. Khách hàng hủy chuyến sau khi đã có tài xế nhưng trước khi tài xế đến điểm đón → hệ thống cập nhật trạng thái "đã hủy", giải phóng tài xế về trạng thái sẵn sàng (chính sách phí hủy: cần làm rõ thêm với khách hàng — xem Open Questions).
+
+**Luồng ngoại lệ:**
+- 4a. Khách hàng không có mặt tại điểm đón → cần quy trình xử lý riêng (chính sách chưa chốt — Open Question), tạm thời chuyển cho nhân viên vận hành xử lý thủ công (→ BP08).
+- 5a. Mất kết nối giữa app tài xế và hệ thống trong khi di chuyển → cần cơ chế đồng bộ lại trạng thái khi có kết nối trở lại (chi tiết kỹ thuật xử lý mất kết nối chưa chốt — Open Question).
+
+---
+
+##### BP04 – Tính cước & Thanh toán (Fare & Payment)
+
+**Mục tiêu:** Xác định số tiền khách hàng phải trả và xử lý thanh toán sau khi hoàn thành chuyến.
+**BR liên quan:** BR18, BR19, BR20, BR21, BR22
+
+**Luồng chính:**
+1. Hệ thống nhận sự kiện "chuyến hoàn thành" từ BP03.
+2. Hệ thống tính cước dựa trên loại dịch vụ và thông tin chuyến đi.
+3. Hệ thống hiển thị số tiền cần thanh toán cho khách hàng.
+4. Khách hàng chọn hình thức thanh toán: tiền mặt hoặc điện tử.
+
+**Nhánh 4a – Thanh toán tiền mặt:**
+- 4a.1. Khách hàng trả tiền mặt trực tiếp cho tài xế.
+- 4a.2. Tài xế xác nhận đã nhận tiền trên hệ thống.
+- 4a.3. Hệ thống cập nhật trạng thái thanh toán "hoàn tất".
+**Nhánh 4b – Thanh toán điện tử:**
+- 4b.1. Hệ thống gửi yêu cầu thanh toán đến nhà cung cấp thanh toán bên ngoài (không gửi kèm thông tin nhạy cảm của thẻ/tài khoản đến hệ thống CAB).
+- 4b.2. Nhà cung cấp thanh toán xử lý và trả kết quả về hệ thống.
+- 4b.3. Hệ thống cập nhật trạng thái thanh toán "hoàn tất" và thông báo kết quả cho khách hàng (→ BP05).
+
+**Luồng ngoại lệ:**
+- 4b.2a. Giao dịch thanh toán điện tử thất bại → hệ thống thông báo cho khách hàng, cho phép chọn lại phương thức thanh toán hoặc thử lại theo chính sách của doanh nghiệp (chi tiết chính sách retry chưa chốt — Open Question).
+
+---
+
+##### BP05 – Thông báo (Notification)
+
+**Mục tiêu:** Đảm bảo khách hàng và tài xế được cập nhật thông tin kịp thời tại các mốc quan trọng.
+**BR liên quan:** BR23, BR24
+
+**Luồng chính (chạy song song/độc lập với các BP khác, được kích hoạt bởi sự kiện):**
+1. Hệ thống lắng nghe các sự kiện phát sinh từ các quy trình khác: tiếp nhận yêu cầu (BP01), tài xế nhận chuyến (BP02), tài xế đến điểm đón / hoàn thành chuyến (BP03), kết quả thanh toán (BP04).
+2. Khi có sự kiện phát sinh, hệ thống xác định đối tượng cần nhận thông báo (khách hàng và/hoặc tài xế).
+3. Hệ thống gửi thông báo qua kênh tương ứng (ví dụ: push notification/app).
+4. Ghi nhận trạng thái gửi thông báo (thành công/thất bại).
+
+**Luồng ngoại lệ:**
+- 3a. Gửi thông báo thất bại → hệ thống ghi log lỗi, có thể thử gửi lại theo chính sách (không được ảnh hưởng đến các chức năng đặt xe/thanh toán khác — theo BR36).
+
+---
+
+##### BP06 – Đánh giá tài xế (Rating)
+
+**Mục tiêu:** Thu thập phản hồi của khách hàng sau chuyến đi.
+**BR liên quan:** BR25
+
+**Luồng chính:**
+1. Sau khi thanh toán hoàn tất (BP04), hệ thống hiển thị màn hình đánh giá cho khách hàng.
+2. Khách hàng chọn mức đánh giá (ví dụ số sao) và có thể để lại nhận xét.
+3. Khách hàng xác nhận gửi đánh giá.
+4. Hệ thống lưu đánh giá, cập nhật điểm trung bình của tài xế.
+
+**Luồng phụ:**
+- 2a. Khách hàng bỏ qua bước đánh giá → hệ thống không ghi nhận đánh giá cho chuyến này, kết thúc quy trình.
+
+---
+
+##### BP07 – Đăng ký & Xác thực tài khoản (Registration & Authentication)
+
+**Mục tiêu:** Cho phép khách hàng/tài xế tạo tài khoản và đăng nhập an toàn vào hệ thống.
+**BR liên quan:** BR01, BR02, BR03, BR04
+
+**Luồng chính:**
+1. Người dùng (khách hàng/tài xế) chọn chức năng đăng ký.
+2. Người dùng nhập thông tin cá nhân bắt buộc.
+3. Hệ thống xác thực thông tin (ví dụ số điện thoại/email) hợp lệ.
+4. Hệ thống tạo tài khoản mới.
+5. Người dùng đăng nhập bằng tài khoản vừa tạo.
+6. Hệ thống xác thực và cấp quyền truy cập tương ứng với vai trò (khách hàng/tài xế/nhân viên vận hành).
+
+**Luồng phụ:**
+- 2a. Đối với tài xế: nhân viên vận hành có thể tạo tài khoản thay tài xế (không qua bước tự đăng ký).
+
+**Luồng ngoại lệ:**
+- 3a. Thông tin không hợp lệ hoặc đã tồn tại → hệ thống thông báo lỗi, yêu cầu người dùng nhập lại.
+- 6a. Sai thông tin đăng nhập → hệ thống từ chối truy cập và thông báo lỗi.
+
+---
+
+##### BP08 – Quản trị & Xử lý sự cố chuyến đi (Admin Operations)
+
+**Mục tiêu:** Hỗ trợ nhân viên vận hành giám sát và xử lý các chuyến đi gặp vấn đề.
+**BR liên quan:** BR26, BR27, BR28, BR29, BR30, BR35
+
+**Luồng chính:**
+1. Nhân viên vận hành đăng nhập vào giao diện quản trị.
+2. Nhân viên xem danh sách các chuyến đang diễn ra và trạng thái tương ứng.
+3. Nhân viên phát hiện hoặc được báo cáo một chuyến gặp sự cố (ví dụ khách không có mặt, tài xế mất kết nối...).
+4. Nhân viên tra cứu thông tin chi tiết chuyến, khách hàng, tài xế liên quan.
+5. Nhân viên thực hiện thao tác xử lý phù hợp (ví dụ: hủy chuyến, ghép lại tài xế, ghi chú sự cố).
+6. Hệ thống ghi log thao tác xử lý (audit log).
+
+**Luồng ngoại lệ:**
+- 5a. Thao tác thuộc nhóm nhạy cảm (ví dụ hoàn tiền, khóa tài khoản) → hệ thống kiểm tra quyền hạn; nếu nhân viên không đủ quyền, từ chối thao tác và yêu cầu chuyển cấp quản trị cao hơn (theo BR04).
+
+---
+
+##### BP09 – Báo cáo vận hành (Reporting)
+
+**Mục tiêu:** Cung cấp số liệu tổng hợp phục vụ ra quyết định quản lý.
+**BR liên quan:** BR31, BR32, BR33
+
+**Luồng chính:**
+1. Nhân viên vận hành/quản lý chọn loại báo cáo cần xem (số lượng chuyến & doanh thu, tỷ lệ hoàn thành/hủy, hiệu quả tài xế).
+2. Nhân viên chọn khoảng thời gian cần thống kê.
+3. Hệ thống tổng hợp dữ liệu từ các chuyến đi, thanh toán, đánh giá tương ứng trong khoảng thời gian đã chọn.
+4. Hệ thống hiển thị báo cáo dưới dạng bảng/biểu đồ.
+
+**Luồng ngoại lệ:**
+- 3a. Không có dữ liệu trong khoảng thời gian được chọn → hệ thống hiển thị thông báo "không có dữ liệu", không báo lỗi hệ thống.
+
+---
+
+##### Ghi chú tổng hợp
+
+- Toàn bộ 9 Business Process (BP01–BP09) trên bao phủ đầy đủ các nhóm BR đã liệt kê ở Bước 5, tương ứng với các module đã xác định ở Bước 4.
+- Các bước có đánh dấu **"chưa chốt" / "Open Question"** (ví dụ: chính sách hủy chuyến, xử lý khách không có mặt, xử lý mất kết nối mạng, chính sách retry thanh toán) cần được BA làm rõ với khách hàng **trước khi chuyển sang thiết kế Use Case chi tiết và đặc tả chức năng (Bước 7)**.
+- Các BP được thiết kế tuân theo nguyên tắc **tách rời và không phụ thuộc chặt (loose coupling)** giữa các phân hệ (ví dụ: lỗi ở BP05 - Thông báo không được làm gián đoạn BP01 - Đặt chuyến), đúng theo yêu cầu BG06/BR36 về khả năng vận hành ổn định.
+
 
 - Bảng trên là **Business Requirement** (mức nghiệp vụ – "cần cái gì, để làm gì"), **chưa** đi vào chi tiết kỹ thuật hay luồng xử lý (đó là việc của Functional Requirement / Use Case ở bước sau).
 - Các BR liên quan đến điểm còn chưa rõ (cách tính cước – BR08, tiêu chí ưu tiên tài xế – BR04, chính sách hủy chuyến chưa có BR riêng, thời gian phản hồi của tài xế – liên quan BR05) **cần được khách hàng xác nhận chi tiết cụ thể** trong buổi họp xác nhận trước khi chốt.
