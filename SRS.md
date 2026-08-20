@@ -677,3 +677,77 @@ Các Functional Requirements được phân rã từ các Business Requirements 
 | **FR98**  | Hệ thống phải cô lập ảnh hưởng khi dịch vụ thanh toán gặp lỗi.                                        |
 | **FR99**  | Hệ thống phải cô lập ảnh hưởng khi dịch vụ thông báo gặp lỗi.                                         |
 | **FR100** | Hệ thống phải duy trì các chức năng cốt lõi của hệ thống đặt xe khi một thành phần phụ trợ gặp sự cố. |
+
+# 8: Business Rules (BRule) & Exception Handling (EX)
+
+**Dự án:** CAB System – Nền tảng đặt xe
+**Vai trò:** Business Analyst (BA)
+
+---
+
+## 1. Mục đích bước này
+
+Sau khi có FR chi tiết (bước 7), BA cần định nghĩa:
+
+- **Business Rule (BRule):** các quy tắc/ràng buộc nghiệp vụ mà hệ thống *luôn phải tuân theo* khi xử lý (ví dụ: điều kiện để được nhận chuyến).
+- **Exception (EX):** các tình huống *ngoại lệ, bất thường* có thể xảy ra trong quy trình, và **quy tắc xử lý** khi tình huống đó xảy ra.
+
+Quy ước mã: **RULE + số thứ tự** cho Business Rule, **EX + số thứ tự** cho Exception. Mỗi mục đều ghi rõ **áp dụng cho FR/BR nào** để dễ truy vết.
+
+> Lưu ý: nhiều thông số cụ thể trong bảng dưới đây (thời gian chờ, số lần thử lại, bán kính tìm kiếm...) hiện **chưa được khách hàng chốt** — BA cần mang các câu hỏi này ra buổi xác nhận với stakeholder (đã nêu ở Bước 4/5). Các giá trị ví dụ trong ngoặc chỉ mang tính minh hoạ, không phải số liệu chính thức.
+
+---
+
+## 2. Business Rules (BRule)
+
+| Mã | Quy tắc | Áp dụng cho | Diễn giải |
+|---|---|---|---|
+| **RULE01** | Chỉ tài xế ở trạng thái **sẵn sàng (online)** mới được đề xuất nhận chuyến | BR04 – FR02 | Tài xế đang offline, đang trong chuyến khác, hoặc đang tạm khoá không được đưa vào danh sách tìm kiếm. |
+| **RULE02** | Tài xế phải đúng loại xe khách hàng yêu cầu mới được đề xuất | BR04 – FR03 | Ví dụ khách hàng chọn xe 7 chỗ thì chỉ đề xuất tài xế có phương tiện 7 chỗ. |
+| **RULE03** | Tài xế chỉ được đề xuất trong bán kính giới hạn quanh khách hàng | BR04 – FR02 | Bán kính cụ thể (ví dụ 5km) cần khách hàng xác nhận; ngoài bán kính này không đề xuất. |
+| **RULE04** | Nếu khách hàng yêu cầu tài xế rating cao, chỉ đề xuất tài xế đạt ngưỡng rating tối thiểu | BR04 – FR04 | Ngưỡng rating cụ thể (ví dụ ≥ 4.5 sao) cần khách hàng xác nhận. |
+| **RULE05** | Tài xế có thời gian giới hạn để phản hồi lời mời nhận chuyến | BR05 – FR01 | Thời gian phản hồi cụ thể (ví dụ 15 giây) cần khách hàng xác nhận; hết thời gian coi như từ chối. |
+| **RULE06** | Một chuyến chỉ được gán cho **một tài xế duy nhất** tại một thời điểm | BR05 – FR02 | Tránh trường hợp hai tài xế cùng nhận một chuyến. |
+| **RULE07** | Thông tin thanh toán nhạy cảm (số thẻ, tài khoản) không được lưu trực tiếp trong hệ thống CAB | BR09 – FR02 | Toàn bộ thông tin nhạy cảm do nhà cung cấp thanh toán bên ngoài quản lý. |
+| **RULE08** | Cước phí được tính và chốt **trước khi** yêu cầu thanh toán | BR08 – FR03 | Đảm bảo khách hàng thấy số tiền chính xác trước khi xác nhận thanh toán. |
+| **RULE09** | Khách hàng chỉ được đánh giá tài xế sau khi chuyến đã **hoàn thành và thanh toán xong** | BR11 – FR01 | Không cho đánh giá khi chuyến chưa kết thúc. |
+| **RULE10** | Thao tác quản trị nhạy cảm (huỷ chuyến, chỉnh sửa giao dịch...) chỉ nhân viên có quyền phù hợp mới thực hiện được | BR15 – FR03 | Áp dụng theo phân quyền vai trò (role-based access). |
+
+---
+
+## 3. Exception Handling (EX)
+
+| Mã | Tình huống ngoại lệ | Áp dụng cho | Cách xử lý |
+|---|---|---|---|
+| **EX01** | Tài xế được đề xuất **quá thời hạn phản hồi** mà chưa bấm nhận | BR05 – FR02, FR03 | Hệ thống tự động coi như **từ chối**, chuyển lời mời sang tài xế phù hợp tiếp theo (quay lại RULE01–RULE04 để chọn tài xế kế tiếp). |
+| **EX02** | Tài xế **chủ động từ chối** chuyến | BR05 – FR02, FR03 | Tương tự EX01: hệ thống chuyển ngay sang tìm tài xế kế tiếp, không cần khách hàng thao tác lại. |
+| **EX03** | Khách hàng chờ tìm tài xế **quá lâu** (đã thử nhiều tài xế nhưng vẫn chưa có ai nhận, hoặc không còn tài xế nào phù hợp trong khu vực) | BR04, BR05 | Sau khi vượt quá thời gian/tổng số lần thử tối đa quy định, hệ thống dừng tìm kiếm và **thông báo rõ ràng cho khách hàng** là không tìm được tài xế; khách hàng có thể huỷ hoặc thử tạo lại yêu cầu. |
+| **EX04** | Không còn tài xế nào khả dụng trong bán kính tìm kiếm ngay từ đầu | BR04 – FR02 | Hệ thống thông báo ngay cho khách hàng thay vì lặp vô hạn; có thể gợi ý mở rộng bán kính hoặc thử lại sau. |
+| **EX05** | Tài xế **mất kết nối mạng** giữa chuyến đang thực hiện | BR06 – FR01 | *(Cần khách hàng xác nhận chính sách cụ thể — ví dụ: hệ thống giữ trạng thái cuối cùng ghi nhận được, cảnh báo nhân viên vận hành nếu mất kết nối quá X phút.)* |
+| **EX06** | Giao dịch thanh toán điện tử **thất bại** | BR10 – FR03, FR04 | Hệ thống thông báo cho khách hàng, cho phép thử lại hoặc đổi phương thức thanh toán (theo chính sách số lần thử lại tối đa của doanh nghiệp). |
+| **EX07** | Khách hàng **huỷ chuyến** sau khi đã có tài xế nhận | BR01, BR05 | *(Chính sách huỷ chuyến — có tính phí hay không, áp dụng từ mốc nào — cần khách hàng xác nhận cụ thể; đây là điểm còn để ngỏ từ Bước 4.)* |
+| **EX08** | Tài xế **huỷ chuyến giữa chừng** sau khi đã nhận | BR05, BR06 | Hệ thống cần coi đây là sự cố ưu tiên cao: thông báo ngay cho khách hàng và tự động tìm tài xế thay thế nếu có thể; ghi nhận vào hồ sơ tài xế để phục vụ đánh giá hiệu suất. |
+| **EX09** | Dữ liệu vị trí tài xế **không cập nhật** trong thời gian dài | BR07 | Hệ thống loại tài xế đó khỏi danh sách tìm kiếm cho đến khi có cập nhật vị trí mới, tránh đề xuất sai vị trí. |
+| **EX10** | Nhân viên vận hành phát hiện chuyến bị lỗi hệ thống (kẹt trạng thái, không đồng bộ...) | BR14 – FR02 | Nhân viên có quyền can thiệp thủ công (gán lại tài xế, cập nhật trạng thái, huỷ chuyến) — hành động này được ghi log theo RULE10 / BR19. |
+
+---
+
+## 4. Bảng liên kết Rule ↔ Exception (theo ví dụ minh hoạ)
+
+| Ví dụ tình huống | Rule liên quan | Exception xử lý |
+|---|---|---|
+| Chỉ tài xế sẵn sàng mới được nhận chuyến | RULE01 | — (đây là rule nền, không phải exception) |
+| Khách hàng chờ tìm tài xế quá lâu | — | EX03 |
+| Tìm được tài xế nhưng quá hạn tài xế mới bấm nhận | RULE05 | EX01 → tự động chuyển tài xế khác |
+
+---
+
+## 5. Các thông số cần khách hàng xác nhận (tổng hợp từ bước này)
+
+- [ ] Thời gian tối đa tài xế phải phản hồi lời mời nhận chuyến (RULE05).
+- [ ] Bán kính tìm kiếm tài xế (RULE03).
+- [ ] Ngưỡng rating tối thiểu khi khách hàng yêu cầu tài xế đánh giá cao (RULE04).
+- [ ] Tổng thời gian / số lần thử tối đa trước khi báo "không tìm được tài xế" (EX03).
+- [ ] Chính sách khi tài xế mất kết nối giữa chuyến (EX05).
+- [ ] Chính sách huỷ chuyến — phí huỷ, mốc thời gian áp dụng (EX07).
+- [ ] Số lần thử lại tối đa khi thanh toán điện tử thất bại (EX06).
