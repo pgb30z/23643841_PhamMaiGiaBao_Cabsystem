@@ -967,3 +967,60 @@ erDiagram
 - Thực thể **AUDIT_LOG** phục vụ trực tiếp BR19 (lưu vết) và RULE10 (kiểm soát thao tác nhạy cảm).
 - Mô hình này **chưa bao gồm** các bảng phụ trợ như cấu hình hệ thống, log kỹ thuật, hàng đợi thông báo (message queue) — đó là chi tiết thiết kế kỹ thuật, nằm ngoài phạm vi Data Model nghiệp vụ của BA.
 - Một số thuộc tính (ví dụ công thức fare_amount, bán kính tìm kiếm dùng ở DRIVER_LOCATION) vẫn phụ thuộc vào các thông số **chưa được khách hàng chốt** (đã liệt kê ở Bước 8, mục 5) — cần cập nhật lại model này sau khi có xác nhận.
+
+# 10: Non-Functional Requirement (NFR)
+
+**Dự án:** CAB System – Nền tảng đặt xe
+**Vai trò:** Business Analyst (BA)
+
+---
+
+## 1. Mục đích bước này
+
+**Functional Requirement (FR)** trả lời câu hỏi *"hệ thống làm được gì"*; **Non-Functional Requirement (NFR)** trả lời câu hỏi *"hệ thống làm tốt tới mức nào"* — hiệu năng, khả năng mở rộng, độ ổn định, bảo mật, khả năng bảo trì...
+
+### Nguyên tắc quan trọng ở giai đoạn thiết kế này
+
+NFR phải **thực tế, phù hợp với quy mô và thời gian dự án (7 tuần, giai đoạn MVP)** — không đặt ra các con số hoặc kiến trúc quá mức cần thiết:
+
+- ❌ *Không* đặt mục tiêu kiểu "thời gian phản hồi dưới 1ms" — đây là mức tiêu chuẩn của hệ thống tài chính tần suất cao (HFT), không cần thiết và không khả thi cho một app đặt xe giai đoạn đầu.
+- ❌ *Không* bắt buộc "phải thiết kế theo kiến trúc microservices" ngay từ đầu — với timeline 7 tuần, việc chia nhỏ microservices quá sớm sẽ làm chậm tiến độ và tăng độ phức tạp vận hành không cần thiết.
+- ✅ Thay vào đó, NFR nên đặt các mục tiêu **"đủ tốt" (good enough), đo lường được, và để ngỏ khả năng mở rộng sau này** — đúng tinh thần BR21 (kiến trúc linh hoạt) đã xác định ở Bước 5, nhưng không "đi trước" nhu cầu thực tế.
+
+---
+
+## 2. Danh sách Non-Functional Requirement
+
+| Mã | Nhóm | Yêu cầu | Diễn giải / Tiêu chí đo lường |
+|---|---|---|---|
+| **NFR01** | Performance | Thời gian phản hồi ở mức chấp nhận được cho trải nghiệm người dùng | API thông thường phản hồi trong khoảng vài trăm mili-giây đến ~2 giây; **không** cần tối ưu tới mức dưới 1ms — mức đó không có ý nghĩa với một ứng dụng đặt xe qua mạng di động. |
+| **NFR02** | Scalability | Hệ thống chịu được tăng tải ở giờ cao điểm | Có thể bắt đầu bằng kiến trúc **modular monolith** (các module tách biệt rõ ràng theo nghiệp vụ: đặt chuyến, thanh toán, thông báo...) thay vì microservices đầy đủ ngay từ đầu; tách thành service riêng khi thực sự cần (theo tải thực tế), tránh over-engineering ở giai đoạn 7 tuần. |
+| **NFR03** | Availability | Hệ thống sẵn sàng phục vụ trong giờ hoạt động cao điểm | Không cần cam kết uptime kiểu 99.99% ngay từ MVP; mục tiêu hợp lý ở mức "ổn định trong giờ cao điểm", có thể nâng dần khi hệ thống trưởng thành. |
+| **NFR04** | Reliability / Fault Isolation | Lỗi ở một chức năng không làm sập toàn hệ thống *(theo BR20)* | Cô lập lỗi bằng cơ chế xử lý bất đồng bộ (hàng đợi/queue) cho các tác vụ như gửi thông báo, gọi cổng thanh toán; nếu một tác vụ lỗi, các luồng chính (đặt chuyến, theo dõi chuyến) vẫn hoạt động bình thường. |
+| **NFR05** | Security | Bảo vệ tài khoản & dữ liệu | Xác thực người dùng (đăng nhập bằng token có thời hạn), mã hóa dữ liệu nhạy cảm khi lưu trữ và truyền tải (HTTPS), không lưu trực tiếp thông tin thẻ/thanh toán trong hệ thống CAB *(theo RULE07)*. |
+| **NFR06** | Maintainability | Dễ bảo trì và mở rộng thêm tính năng | Tổ chức code theo module/domain rõ ràng (đặt chuyến, tài xế, thanh toán, thông báo...) để sau này có thể tách thành service độc lập **khi cần**, mà không phải viết lại từ đầu — chuẩn bị sẵn "đường mở rộng" chứ chưa cần triển khai ngay. |
+| **NFR07** | Deployability | Triển khai từng phần, ít ảnh hưởng tính năng đang chạy *(theo BR21)* | Áp dụng versioning cho API và/hoặc feature flag ở mức cơ bản để phát hành tính năng mới song song với hệ thống đang hoạt động. |
+| **NFR08** | Usability | Giao diện dễ dùng cho khách hàng và tài xế | Thao tác đặt chuyến, nhận chuyến tối giản số bước; ưu tiên trải nghiệm trên thiết bị di động vì đây là kênh sử dụng chính. |
+| **NFR09** | Compatibility | Hoạt động trên các nền tảng phổ biến | Ứng dụng khách hàng/tài xế chạy tốt trên iOS và Android; giao diện quản trị cho nhân viên vận hành chạy tốt trên trình duyệt web phổ biến. |
+| **NFR10** | Auditability | Có thể truy vết thao tác quan trọng *(theo BR19)* | Ghi log các thao tác nhạy cảm (huỷ chuyến, chỉnh sửa giao dịch, phân quyền...) kèm thời gian và người thực hiện; định dạng log đơn giản, dễ tra cứu — chưa cần hệ thống phân tích log phức tạp ở giai đoạn MVP. |
+| **NFR11** | Data Retention | Lưu trữ dữ liệu trong thời gian phù hợp | Thời gian lưu trữ cụ thể **chưa được khách hàng chốt** (đã nêu ở Bước 4/8) — cần xác nhận thêm trước khi áp dụng chính sách xoá/lưu trữ dữ liệu chính thức. |
+| **NFR12** | Time-to-Market | Kiến trúc phù hợp với ràng buộc 7 tuần triển khai | Ưu tiên giải pháp đơn giản, dễ triển khai nhanh, tránh chọn công nghệ/kiến trúc phức tạp chỉ để "phòng xa" cho quy mô chưa xảy ra; mở rộng dần theo nhu cầu thực tế sau khi ra mắt. |
+
+---
+
+## 3. Bảng phân loại theo mức độ ưu tiên (giai đoạn MVP – 7 tuần)
+
+| Mức ưu tiên | NFR |
+|---|---|
+| **Phải có ngay (Must-have)** | NFR01 (hiệu năng ở mức hợp lý), NFR04 (cô lập lỗi cơ bản), NFR05 (bảo mật), NFR08 (dễ dùng), NFR10 (log thao tác nhạy cảm) |
+| **Nên có, không bắt buộc hoàn hảo ngay (Should-have)** | NFR02 (scalability ở mức module hoá), NFR06 (maintainability), NFR07 (deployability), NFR09 (compatibility) |
+| **Có thể hoàn thiện dần sau MVP (Could-have)** | NFR03 (uptime cam kết cao), NFR11 (chính sách lưu trữ dữ liệu chi tiết), NFR12 (tối ưu kiến trúc dài hạn) |
+
+---
+
+## 4. Ghi chú quan trọng
+
+- NFR ở bước này mô tả **mức độ mong muốn**, không phải chỉ số kỹ thuật cứng nhắc — các con số cụ thể (bao nhiêu giây, bao nhiêu % uptime) nên được đội kỹ thuật/kiến trúc sư cùng thảo luận và tinh chỉnh dựa trên năng lực hạ tầng thực tế, **không tự đặt ra con số cực đoan khi chưa có nhu cầu tương ứng**.
+- Việc chọn kiến trúc (modular monolith hay microservices) là quyết định của đội kỹ thuật/kiến trúc sư dựa trên các NFR này — BA chỉ nêu **mục tiêu nghiệp vụ cần đạt** (ví dụ: "lỗi thanh toán không được làm sập hệ thống đặt xe"), không áp đặt giải pháp kỹ thuật cụ thể.
+- Các NFR liên quan đến điểm còn chưa rõ (thời gian lưu trữ dữ liệu – NFR11) cần được cập nhật lại sau khi khách hàng xác nhận.
+
