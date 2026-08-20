@@ -202,121 +202,54 @@ Hệ thống được định hướng có khả năng mở rộng, do đó các
 * Bổ sung các chức năng nghiệp vụ mới theo nhu cầu kinh doanh.
 * Thay đổi hoặc nâng cấp các thành phần kỹ thuật mà hạn chế ảnh hưởng đến các chức năng đang hoạt động.
 
-# 5.Phân tích yêu cầu khách hàng – Bước 1: Business Context
+# 5: Xác nhận với khách hàng & Chuyển thành Business Requirement (BR)
 
 **Dự án:** CAB System – Nền tảng đặt xe
 **Vai trò:** Business Analyst (BA)
-**Giai đoạn:** Sơ khởi (Inception) – Bước 1: Hiểu Business Context
-**Nguồn:** Tài liệu yêu cầu khách hàng (Customer Requirement)
 
 ---
 
-## 1. Mục đích của bước này
+## 1. Mục đích bước này
 
-Trước khi đi vào phân tích chức năng chi tiết, BA cần hiểu **ngữ cảnh nghiệp vụ (Business Context)** — tức là: doanh nghiệp đang làm gì, đang gặp vấn đề gì, muốn đạt được điều gì, và hệ thống mới đóng vai trò gì trong bức tranh đó. Đây là nền tảng để các bước sau (xác định actor, use case, yêu cầu chức năng/phi chức năng...) không bị lệch hướng.
+Sau khi hoàn thành **Bước 4** (thu thập & đặc tả yêu cầu chức năng/phi chức năng chi tiết, làm rõ các điểm còn mơ hồ với stakeholder), BA cần:
 
----
+1. Tổ chức buổi họp xác nhận lại với khách hàng để đảm bảo hiểu đúng yêu cầu.
+2. Sau khi khách hàng xác nhận, chuyển hóa các yêu cầu đó thành **Business Requirement (BR)** — mô tả *doanh nghiệp cần gì* (ở mức nghiệp vụ), làm nền tảng để sau này BA tiếp tục phân rã thành Functional Requirement (FR) chi tiết hơn.
 
-## 2. Thông tin nền (Background)
-
-| Hạng mục | Nội dung |
-|---|---|
-| Khách hàng | Công ty ABC – doanh nghiệp cung cấp dịch vụ đặt xe trực tuyến |
-| Sản phẩm | CAB System – nền tảng đặt xe mới |
-| Thời gian triển khai | 7 tuần |
-| Hiện trạng (As-is) | Đặt xe qua tổng đài hoặc app đơn giản; phân công tài xế thủ công |
+Mỗi BR được đặt mã theo quy tắc: **BR + số thứ tự 2 chữ số** (BR01, BR02, BR03...).
 
 ---
 
-## 3. Hiện trạng & Vấn đề (As-is & Pain Points)
+## 2. Danh sách Business Requirement (BR)
 
-- Phân công tài xế chủ yếu **thủ công**, chưa tự động hóa.
-- Khách hàng **khó theo dõi trạng thái chuyến đi**.
-- Thông tin thanh toán **chưa được quản lý tập trung**.
-- Bộ phận vận hành **khó mở rộng hệ thống** khi quy mô tăng.
-
----
-
-## 4. Mục tiêu doanh nghiệp (Business Goals)
-
-1. Xây dựng nền tảng có khả năng **phục vụ số lượng lớn** khách hàng và tài xế.
-2. Có khả năng **mở rộng thêm tính năng** trong tương lai (dịch vụ mới, phương thức thanh toán mới, kênh thông báo mới...).
-3. Đảm bảo **vận hành ổn định** ngay cả khi một thành phần (thanh toán, thông báo...) gặp sự cố — không làm sập toàn hệ thống.
-4. Cho phép **triển khai từng phần** tính năng mới mà không ảnh hưởng phần đang chạy.
-
-> Đây là tín hiệu cho thấy khách hàng không chỉ cần một app đặt xe đơn thuần, mà cần một **nền tảng (platform)** có kiến trúc linh hoạt, có thể mở rộng lâu dài — điều này ảnh hưởng đến cách BA đặt câu hỏi và cách kiến trúc sư thiết kế hệ thống sau này.
-
----
-
-## 5. Các nhóm người dùng chính (High-level Actors)
-
-| Actor | Vai trò trong hệ thống |
-|---|---|
-| **Khách hàng (Customer)** | Đặt xe, theo dõi chuyến đi, thanh toán, đánh giá tài xế |
-| **Tài xế (Driver)** | Nhận/từ chối chuyến, cập nhật trạng thái chuyến, cập nhật vị trí |
-| **Nhân viên vận hành (Operator/Admin)** | Quản trị khách hàng, tài xế, phương tiện, chuyến đi; xử lý sự cố; xem báo cáo |
-| **Nhà cung cấp thanh toán bên ngoài** | Actor hệ thống (external system) xử lý giao dịch thanh toán điện tử |
+| Mã | Tên | Diễn giải |
+|---|---|---|
+| **BR01** | Đặt chuyến | Khách hàng có thể tạo yêu cầu đặt xe bằng cách nhập điểm đón, điểm đến và chọn loại xe; hệ thống tiếp nhận và bắt đầu quy trình tìm tài xế. |
+| **BR02** | Quản lý tài khoản khách hàng | Khách hàng có thể đăng ký, đăng nhập và cập nhật thông tin cá nhân để sử dụng dịch vụ. |
+| **BR03** | Quản lý tài khoản & hồ sơ tài xế | Tài xế được đăng ký (tự đăng ký hoặc do nhân viên vận hành tạo) và có thể cập nhật hồ sơ, thông tin phương tiện, trạng thái hoạt động. |
+| **BR04** | Tìm kiếm & phân công tài xế | Hệ thống tự động xác định và đề xuất tài xế phù hợp cho một chuyến đi, dựa trên vị trí, trạng thái sẵn sàng và tiêu chí vận hành. |
+| **BR05** | Xử lý từ chối/không phản hồi của tài xế | Khi tài xế được đề xuất không nhận chuyến, hệ thống tự động tìm tài xế khác mà không yêu cầu khách hàng tạo lại yêu cầu; nếu không tìm được, khách hàng phải được thông báo rõ ràng. |
+| **BR06** | Theo dõi trạng thái chuyến đi | Khách hàng và tài xế có thể theo dõi/cập nhật trạng thái chuyến đi theo thời gian thực (đang tìm tài xế, đã nhận chuyến, đã đến điểm đón, đang di chuyển, hoàn thành...). |
+| **BR07** | Cập nhật vị trí tài xế | Hệ thống lưu và cập nhật vị trí tài xế để hỗ trợ việc tìm tài xế gần khách hàng và ước tính thời gian đến. |
+| **BR08** | Tính cước chuyến đi | Sau khi chuyến đi hoàn thành, hệ thống tự động xác định số tiền khách hàng phải trả dựa trên loại dịch vụ và thông tin chuyến đi. |
+| **BR09** | Thanh toán | Khách hàng có thể thanh toán bằng tiền mặt hoặc phương thức điện tử; hệ thống tích hợp với nhà cung cấp thanh toán bên ngoài mà không lưu trực tiếp thông tin nhạy cảm của thẻ/tài khoản. |
+| **BR10** | Xử lý lỗi thanh toán | Khi giao dịch thanh toán điện tử thất bại, hệ thống thông báo cho khách hàng và cho phép xử lý lại theo chính sách doanh nghiệp. |
+| **BR11** | Lịch sử chuyến & đánh giá tài xế | Khách hàng có thể xem lịch sử chuyến đi, số tiền đã trả và đánh giá tài xế sau khi hoàn thành chuyến. |
+| **BR12** | Thông báo cho khách hàng | Khách hàng nhận thông báo tại các mốc quan trọng: yêu cầu được tiếp nhận, tài xế nhận chuyến, tài xế đến điểm đón, chuyến hoàn thành, kết quả thanh toán. |
+| **BR13** | Thông báo cho tài xế | Tài xế nhận thông báo về chuyến mới hoặc thay đổi liên quan đến chuyến đang thực hiện. |
+| **BR14** | Quản trị vận hành | Nhân viên vận hành có giao diện quản trị để quản lý khách hàng, tài xế, phương tiện và chuyến đi, bao gồm xử lý các chuyến bị lỗi và tra cứu lịch sử giao dịch. |
+| **BR15** | Phân quyền thao tác quản trị | Các thao tác quản trị nhạy cảm phải được phân quyền, nhân viên thông thường không thể thực hiện. |
+| **BR16** | Báo cáo & thống kê vận hành | Ban lãnh đạo có báo cáo về số lượng chuyến, doanh thu, tỷ lệ chuyến hoàn thành, tỷ lệ hủy và hiệu quả hoạt động của tài xế. |
+| **BR17** | Xác thực người dùng | Khách hàng và tài xế phải được xác thực trước khi sử dụng các chức năng yêu cầu tài khoản. |
+| **BR18** | Bảo vệ dữ liệu | Thông tin cá nhân, thông tin phương tiện, dữ liệu vị trí và dữ liệu giao dịch phải được bảo vệ. |
+| **BR19** | Lưu vết thao tác (Audit log) | Hệ thống lưu vết các thao tác quan trọng để phục vụ kiểm tra khi có sự cố. |
+| **BR20** | Vận hành ổn định & chịu lỗi cục bộ | Hệ thống phải hoạt động ổn định vào thời điểm nhu cầu cao; lỗi ở một chức năng (thanh toán, thông báo...) không được làm ngừng toàn bộ hệ thống đặt xe. |
+| **BR21** | Kiến trúc mở rộng linh hoạt | Hệ thống phải có khả năng mở rộng độc lập theo tải, triển khai từng phần và bổ sung dịch vụ mới, phương thức thanh toán mới, kênh thông báo mới mà không cần xây dựng lại toàn bộ. |
 
 ---
 
-## 6. Các luồng nghiệp vụ cốt lõi (Core Business Flows – mức tổng quan)
+## 3. Ghi chú
 
-1. Khách hàng tạo yêu cầu đặt xe → hệ thống tìm tài xế phù hợp.
-2. Tài xế nhận/từ chối chuyến → hệ thống điều phối lại nếu bị từ chối.
-3. Thực hiện chuyến đi → cập nhật trạng thái theo thời gian thực.
-4. Hoàn thành chuyến → tính cước → thanh toán (tiền mặt / điện tử).
-5. Thông báo xuyên suốt hành trình cho cả khách hàng và tài xế.
-6. Nhân viên vận hành giám sát, xử lý ngoại lệ, xem báo cáo.
-
----
-
-## 7. Ràng buộc & Yếu tố phi chức năng ở mức khái niệm (Constraints)
-
-- **Bảo mật:** xác thực người dùng, phân quyền cho thao tác quản trị nhạy cảm, không lưu trực tiếp thông tin thanh toán nhạy cảm trong hệ thống CAB.
-- **Khả năng chịu tải:** hệ thống phải ổn định vào giờ cao điểm.
-- **Khả năng mở rộng độc lập:** các thành phần (thanh toán, thông báo, tìm tài xế...) nên tách rời để lỗi một phần không kéo sập toàn hệ thống — gợi ý hướng kiến trúc **microservices / loosely-coupled**.
-- **Audit trail:** cần lưu vết các thao tác quan trọng để phục vụ kiểm tra khi có sự cố.
-- **Thời gian:** chỉ 7 tuần triển khai — ràng buộc lớn về phạm vi (scope) MVP.
-
----
-
-## 8. Những điểm chưa rõ – cần làm rõ với stakeholder (Open Questions)
-
-Khách hàng đã chủ động nêu các nội dung **chưa chốt**, đây là input quan trọng cho bước tiếp theo (Requirement Elicitation):
-
-- [ ] Cách tính cước chi tiết như thế nào?
-- [ ] Tiêu chí ưu tiên tài xế khi có nhiều tài xế phù hợp là gì?
-- [ ] Thời gian tối đa tài xế phải phản hồi một chuyến là bao lâu?
-- [ ] Chính sách hủy chuyến (ai được hủy, khi nào, có phí không)?
-- [ ] Xử lý ra sao khi tài xế/khách hàng mất kết nối mạng giữa chuyến?
-- [ ] Thời gian lưu trữ dữ liệu (chuyến đi, vị trí, giao dịch...) là bao lâu?
-
-> Đây chính là danh sách câu hỏi BA cần mang đi họp với stakeholder trước khi đội phát triển bắt tay vào thiết kế giải pháp.
-
----
-
-## 9. Kỳ vọng của khách hàng đối với vai trò BA
-
-Theo tài liệu gốc, khách hàng kỳ vọng BA trong giai đoạn phân tích sẽ xác định rõ:
-
-- Phạm vi (Scope)
-- Tác nhân (Actors)
-- Quy trình nghiệp vụ (Business Process)
-- Yêu cầu chức năng (Functional Requirements)
-- Yêu cầu phi chức năng (Non-functional Requirements)
-- Quy tắc nghiệp vụ (Business Rules)
-- Trường hợp ngoại lệ (Exception Cases)
-- Các điểm chưa rõ cần xác nhận thêm
-
----
-
-## 10. Bước tiếp theo (Next Steps)
-
-Sau khi đã nắm được Business Context, các bước tiếp theo trong quy trình BA thường là:
-
-1. Xác định phạm vi chi tiết (Scope Definition)
-2. Vẽ sơ đồ Actor & Use Case tổng quan
-3. Đặc tả quy trình nghiệp vụ (Business Process Modeling – BPMN)
-4. Thu thập & đặc tả yêu cầu chức năng / phi chức năng chi tiết
-5. Xác định quy tắc nghiệp vụ & trường hợp ngoại lệ
-6. Tổ chức buổi làm rõ yêu cầu (requirement clarification) với stakeholder cho các mục ở mục 8
+- Bảng trên là **Business Requirement** (mức nghiệp vụ – "cần cái gì, để làm gì"), **chưa** đi vào chi tiết kỹ thuật hay luồng xử lý (đó là việc của Functional Requirement / Use Case ở bước sau).
+- Các BR liên quan đến điểm còn chưa rõ (cách tính cước – BR08, tiêu chí ưu tiên tài xế – BR04, chính sách hủy chuyến chưa có BR riêng, thời gian phản hồi của tài xế – liên quan BR05) **cần được khách hàng xác nhận chi tiết cụ thể** trong buổi họp xác nhận trước khi chốt.
+- Sau khi khách hàng ký xác nhận bảng BR này, bước tiếp theo là phân rã từng BR thành các **Functional Requirement (FR)** và **Use Case** chi tiết.
