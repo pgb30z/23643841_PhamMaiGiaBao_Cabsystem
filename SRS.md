@@ -459,7 +459,7 @@ Từ danh sách Business Requirements (BR01–BR37) đã xác nhận với khác
 
 Các Functional Requirements được phân rã từ các Business Requirements nhằm xác định cụ thể những chức năng mà hệ thống CAB System phải cung cấp.
 
-## 7.1. FR cho BR01 – Quản lý tài khoản
+## 1. FR cho BR01 – Quản lý tài khoản
 
 | ID       | Functional Requirement                                                                      |
 | -------- | ------------------------------------------------------------------------------------------- |
@@ -469,7 +469,7 @@ Các Functional Requirements được phân rã từ các Business Requirements 
 | **FR04** | Hệ thống phải xác thực người dùng trước khi sử dụng các chức năng yêu cầu tài khoản.        |
 | **FR05** | Hệ thống phải cho phép khách hàng và tài xế cập nhật thông tin cá nhân.                     |
 
-## 7.2. FR cho BR02 – Quản lý tài xế và phương tiện
+## 2. FR cho BR02 – Quản lý tài xế và phương tiện
 
 | ID       | Functional Requirement                                                                         |
 | -------- | ---------------------------------------------------------------------------------------------- |
@@ -479,7 +479,7 @@ Các Functional Requirements được phân rã từ các Business Requirements 
 | **FR09** | Hệ thống phải cho phép tài xế chuyển sang trạng thái sẵn sàng hoặc không sẵn sàng nhận chuyến. |
 | **FR10** | Hệ thống phải ghi nhận thông tin vị trí hiện tại của tài xế để phục vụ việc tìm kiếm tài xế.   |
 
-## 7.3. FR cho BR03 – Đặt chuyến
+## 3. FR cho BR03 – Đặt chuyến
 
 | ID       | Functional Requirement                                               |
 | -------- | -------------------------------------------------------------------- |
@@ -489,7 +489,7 @@ Các Functional Requirements được phân rã từ các Business Requirements 
 | **FR14** | Hệ thống phải cho phép khách hàng gửi yêu cầu đặt chuyến.            |
 | **FR15** | Hệ thống phải ghi nhận yêu cầu đặt chuyến và trạng thái của yêu cầu. |
 
-## 7.4. FR cho BR04 – Tìm kiếm tài xế
+## 4. FR cho BR04 – Tìm kiếm tài xế
 
 | ID       | Functional Requirement                                                                     |
 | -------- | ------------------------------------------------------------------------------------------ |
@@ -502,7 +502,7 @@ Các Functional Requirements được phân rã từ các Business Requirements 
 
 > **Lưu ý:** Tiêu chí cụ thể và thứ tự ưu tiên tài xế chưa được khách hàng chốt, vì vậy FR21 cần được làm rõ thêm trước khi triển khai.
 
-## 7.5. FR cho BR05 – Phân công tài xế
+## 5. FR cho BR05 – Phân công tài xế
 
 | ID       | Functional Requirement                                                            |
 | -------- | --------------------------------------------------------------------------------- |
@@ -516,7 +516,7 @@ Các Functional Requirements được phân rã từ các Business Requirements 
 | **FR29** | Hệ thống phải thông báo cho khách hàng khi tài xế được phân công.                 |
 | **FR30** | Hệ thống phải thông báo cho khách hàng khi không tìm được tài xế phù hợp.         |
 
-## 7.6. FR cho BR06 – Theo dõi chuyến đi
+## 6. FR cho BR06 – Theo dõi chuyến đi
 
 | ID       | Functional Requirement                                                 |
 | -------- | ---------------------------------------------------------------------- |
@@ -525,7 +525,7 @@ Các Functional Requirements được phân rã từ các Business Requirements 
 | **FR33** | Hệ thống phải hiển thị trạng thái hiện tại của chuyến đi.              |
 | **FR34** | Hệ thống phải cập nhật trạng thái chuyến khi có thay đổi.              |
 
-## 7.7. FR cho BR07 – Cập nhật trạng thái chuyến
+## 7. FR cho BR07 – Cập nhật trạng thái chuyến
 
 | ID       | Functional Requirement                                               |
 | -------- | -------------------------------------------------------------------- |
@@ -535,7 +535,7 @@ Các Functional Requirements được phân rã từ các Business Requirements 
 | **FR38** | Hệ thống phải cho phép tài xế cập nhật trạng thái hoàn thành chuyến. |
 | **FR39** | Hệ thống phải lưu lại lịch sử thay đổi trạng thái chuyến.            |
 
-## 7.8. FR cho BR08 – Quản lý vị trí tài xế
+## 8. FR cho BR08 – Quản lý vị trí tài xế
 
 | ID       | Functional Requirement                                                                  |
 | -------- | --------------------------------------------------------------------------------------- |
@@ -543,7 +543,7 @@ Các Functional Requirements được phân rã từ các Business Requirements 
 | **FR41** | Hệ thống phải sử dụng thông tin vị trí tài xế để hỗ trợ tìm kiếm tài xế.                |
 | **FR42** | Hệ thống phải sử dụng thông tin vị trí để hỗ trợ xác định thời gian dự kiến tài xế đến. |
 
-## 7.9. FR cho BR09 – Tính cước
+## 9. FR cho BR09 – Tính cước
 
 | ID       | Functional Requirement                                                        |
 | -------- | ----------------------------------------------------------------------------- |
@@ -553,7 +553,7 @@ Các Functional Requirements được phân rã từ các Business Requirements 
 
 > **Lưu ý:** Công thức và các quy tắc tính cước chưa được khách hàng xác định nên cần được làm rõ.
 
-## 7.10. FR cho BR10 – Thanh toán
+## 10. FR cho BR10 – Thanh toán
 
 | ID       | Functional Requirement                                                                  |
 | -------- | --------------------------------------------------------------------------------------- |
@@ -563,7 +563,7 @@ Các Functional Requirements được phân rã từ các Business Requirements 
 | **FR49** | Hệ thống phải tiếp nhận và ghi nhận kết quả giao dịch từ Payment Provider.              |
 | **FR50** | Hệ thống không được lưu trực tiếp thông tin nhạy cảm của thẻ hoặc tài khoản thanh toán. |
 
-## 7.11. FR cho BR11 – Xử lý thanh toán thất bại
+## 11. FR cho BR11 – Xử lý thanh toán thất bại
 
 | ID       | Functional Requirement                                                                |
 | -------- | ------------------------------------------------------------------------------------- |
@@ -571,7 +571,7 @@ Các Functional Requirements được phân rã từ các Business Requirements 
 | **FR52** | Hệ thống phải thông báo cho khách hàng khi giao dịch thanh toán thất bại.             |
 | **FR53** | Hệ thống phải hỗ trợ xử lý lại giao dịch theo chính sách thanh toán của doanh nghiệp. |
 
-## 7.12. FR cho BR12 – Thông báo
+## 12. FR cho BR12 – Thông báo
 
 | ID       | Functional Requirement                                                                  |
 | -------- | --------------------------------------------------------------------------------------- |
@@ -584,21 +584,21 @@ Các Functional Requirements được phân rã từ các Business Requirements 
 | **FR60** | Hệ thống phải thông báo cho tài xế khi có thay đổi liên quan đến chuyến đang thực hiện. |
 | **FR61** | Hệ thống phải hỗ trợ tích hợp với nhà cung cấp dịch vụ thông báo.                       |
 
-## 7.13. FR cho BR13 – Lịch sử chuyến đi
+## 13. FR cho BR13 – Lịch sử chuyến đi
 
 | ID       | Functional Requirement                                                     |
 | -------- | -------------------------------------------------------------------------- |
 | **FR62** | Hệ thống phải cho phép khách hàng xem lịch sử chuyến đi.                   |
 | **FR63** | Hệ thống phải hiển thị thông tin chuyến và số tiền phải trả trong lịch sử. |
 
-## 7.14. FR cho BR14 – Đánh giá tài xế
+## 14. FR cho BR14 – Đánh giá tài xế
 
 | ID       | Functional Requirement                                                       |
 | -------- | ---------------------------------------------------------------------------- |
 | **FR64** | Hệ thống phải cho phép khách hàng đánh giá tài xế sau khi chuyến hoàn thành. |
 | **FR65** | Hệ thống phải lưu kết quả đánh giá của khách hàng.                           |
 
-## 7.15. FR cho BR15 – Quản lý vận hành
+## 15. FR cho BR15 – Quản lý vận hành
 
 | ID       | Functional Requirement                                                   |
 | -------- | ------------------------------------------------------------------------ |
@@ -608,7 +608,7 @@ Các Functional Requirements được phân rã từ các Business Requirements 
 | **FR69** | Hệ thống phải cho phép nhân viên vận hành quản lý phương tiện.           |
 | **FR70** | Hệ thống phải cho phép nhân viên vận hành quản lý và theo dõi chuyến đi. |
 
-## 7.16. FR cho BR16 – Giám sát và xử lý sự cố
+## 16. FR cho BR16 – Giám sát và xử lý sự cố
 
 | ID       | Functional Requirement                                                      |
 | -------- | --------------------------------------------------------------------------- |
@@ -617,7 +617,7 @@ Các Functional Requirements được phân rã từ các Business Requirements 
 | **FR73** | Hệ thống phải hỗ trợ nhân viên vận hành xử lý các trường hợp chuyến bị lỗi. |
 | **FR74** | Hệ thống phải cho phép nhân viên vận hành tra cứu lịch sử giao dịch.        |
 
-## 7.17. FR cho BR17 – Phân quyền quản trị
+## 17. FR cho BR17 – Phân quyền quản trị
 
 | ID       | Functional Requirement                                                       |
 | -------- | ---------------------------------------------------------------------------- |
@@ -625,7 +625,7 @@ Các Functional Requirements được phân rã từ các Business Requirements 
 | **FR76** | Hệ thống phải giới hạn chức năng theo quyền được cấp.                        |
 | **FR77** | Hệ thống phải ngăn nhân viên không có quyền thực hiện các thao tác nhạy cảm. |
 
-## 7.18. FR cho BR18 – Báo cáo
+## 18. FR cho BR18 – Báo cáo
 
 | ID       | Functional Requirement                                           |
 | -------- | ---------------------------------------------------------------- |
@@ -635,7 +635,7 @@ Các Functional Requirements được phân rã từ các Business Requirements 
 | **FR81** | Hệ thống phải cung cấp báo cáo về tỷ lệ hủy chuyến.              |
 | **FR82** | Hệ thống phải cung cấp báo cáo về hiệu quả hoạt động của tài xế. |
 
-## 7.19. FR cho BR19 – Bảo vệ dữ liệu
+## 19. FR cho BR19 – Bảo vệ dữ liệu
 
 | ID       | Functional Requirement                                                                         |
 | -------- | ---------------------------------------------------------------------------------------------- |
@@ -645,7 +645,7 @@ Các Functional Requirements được phân rã từ các Business Requirements 
 | **FR86** | Hệ thống phải bảo vệ dữ liệu giao dịch.                                                        |
 | **FR87** | Hệ thống không được lưu trực tiếp thông tin nhạy cảm của thẻ hoặc tài khoản thanh toán.        |
 
-## 7.20. FR cho BR20 – Audit Log
+## 20. FR cho BR20 – Audit Log
 
 | ID       | Functional Requirement                                                           |
 | -------- | -------------------------------------------------------------------------------- |
@@ -653,7 +653,7 @@ Các Functional Requirements được phân rã từ các Business Requirements 
 | **FR89** | Hệ thống phải lưu thông tin cần thiết để truy vết các thao tác khi xảy ra sự cố. |
 | **FR90** | Hệ thống phải cho phép người có quyền tra cứu các log phục vụ kiểm tra.          |
 
-## 7.21. FR cho BR21 – Khả năng mở rộng
+## 21. FR cho BR21 – Khả năng mở rộng
 
 | ID       | Functional Requirement                                                                             |
 | -------- | -------------------------------------------------------------------------------------------------- |
@@ -661,7 +661,7 @@ Các Functional Requirements được phân rã từ các Business Requirements 
 | **FR92** | Các thành phần của hệ thống phải có khả năng mở rộng độc lập khi tải tăng.                         |
 | **FR93** | Lỗi tại một thành phần như thanh toán hoặc thông báo không được làm dừng toàn bộ chức năng đặt xe. |
 
-## 7.22. FR cho BR22 – Khả năng mở rộng dịch vụ
+## 22. FR cho BR22 – Khả năng mở rộng dịch vụ
 
 | ID       | Functional Requirement                                                                                             |
 | -------- | ------------------------------------------------------------------------------------------------------------------ |
@@ -670,7 +670,7 @@ Các Functional Requirements được phân rã từ các Business Requirements 
 | **FR96** | Hệ thống phải cho phép tích hợp thêm nhà cung cấp dịch vụ thông báo.                                               |
 | **FR97** | Hệ thống phải hỗ trợ triển khai các chức năng mới từng phần mà hạn chế ảnh hưởng đến các chức năng đang hoạt động. |
 
-## 7.23. FR cho BR23 – Đảm bảo tính liên tục của hệ thống
+## 23. FR cho BR23 – Đảm bảo tính liên tục của hệ thống
 
 | ID        | Functional Requirement                                                                                |
 | --------- | ----------------------------------------------------------------------------------------------------- |
@@ -1586,5 +1586,189 @@ flowchart LR
   4. Dữ liệu được lưu để phục vụ kiểm tra.
 - **Hậu điều kiện:** Thao tác được ghi nhận vào nhật ký hệ thống.
 
-# 13.
+# 13: Xác định Tiêu chí chấp nhận (Acceptance Criteria - AC)
+
+Acceptance Criteria là tập hợp các điều kiện và nguyên tắc cụ thể mà một tính năng phải đáp ứng, giúp đội phát triển và khách hàng xác định rõ **khi nào một Business Requirement được coi là hoàn thành và có thể nghiệm thu**. Mỗi AC được viết theo cấu trúc **Given – When – Then** và gắn với mã BN/UC tương ứng.
+
+## 1 Nhóm Tài khoản & Hồ sơ (BN01, BN02)
+
+**AC01** — Đăng ký tài khoản thành công (liên quan UC01)
+- Given: Khách hàng chưa có tài khoản trên hệ thống
+- When: Khách hàng nhập số điện thoại/email chưa từng đăng ký và mật khẩu hợp lệ, sau đó gửi form đăng ký
+- Then: Hệ thống tạo tài khoản mới thành công và cho phép đăng nhập
+
+**AC02** — Từ chối đăng ký trùng thông tin (liên quan UC01, EX01)
+- Given: Số điện thoại/email đã tồn tại trên hệ thống
+- When: Người dùng cố đăng ký lại với thông tin đó
+- Then: Hệ thống từ chối, hiển thị thông báo "tài khoản đã tồn tại" và gợi ý đăng nhập
+
+**AC03** — Đăng nhập thành công (liên quan UC02, UC11)
+- Given: Tài khoản đã tồn tại và ở trạng thái active
+- When: Người dùng nhập đúng thông tin đăng nhập
+- Then: Hệ thống cấp phiên đăng nhập và cho phép truy cập các chức năng tương ứng với vai trò
+
+**AC04** — Chặn chuyển trạng thái sẵn sàng khi hồ sơ chưa đầy đủ (liên quan UC12, UC13, BR02, EX02)
+- Given: Tài xế chưa khai báo đầy đủ thông tin phương tiện
+- When: Tài xế cố chuyển trạng thái sang "sẵn sàng nhận chuyến"
+- Then: Hệ thống chặn thao tác và yêu cầu bổ sung thông tin còn thiếu
+
+## 2 Nhóm Đặt xe & Tìm tài xế (BN03–BN06)
+
+**AC05** — Tạo yêu cầu đặt xe thành công (liên quan UC04)
+- Given: Khách hàng đã đăng nhập
+- When: Khách hàng nhập đầy đủ điểm đón, điểm đến, chọn loại xe và gửi yêu cầu
+- Then: Hệ thống tạo bản ghi Trip với trạng thái "searching" và bắt đầu tìm tài xế
+
+**AC06** — Chỉ đề xuất tài xế đang sẵn sàng (liên quan UC26, BR03)
+- Given: Có danh sách tài xế trong bán kính tìm kiếm
+- When: Hệ thống lọc tài xế để đề xuất
+- Then: Chỉ những tài xế có trạng thái "sẵn sàng (online)" được đưa vào danh sách đề xuất
+
+**AC07** — Một tài xế không nhận đồng thời 2 chuyến (liên quan UC14, BR04)
+- Given: Tài xế đang thực hiện một chuyến khác (status = on_trip)
+- When: Hệ thống tìm tài xế cho một chuyến mới
+- Then: Tài xế đó không được đưa vào danh sách đề xuất cho chuyến mới
+
+**AC08** — Tự động chuyển tài xế khi từ chối (liên quan UC14, EX05)
+- Given: Tài xế A được mời chuyến và chủ động từ chối
+- When: Hệ thống nhận được phản hồi từ chối
+- Then: Hệ thống ngay lập tức mời tài xế tiếp theo trong danh sách, không chờ hết thời gian giới hạn
+
+**AC09** — Tự động chuyển tài xế khi hết thời gian phản hồi (liên quan UC14, BR05, EX04)
+- Given: Tài xế A được mời chuyến nhưng không phản hồi trong khoảng thời gian quy định
+- When: Thời gian chờ phản hồi kết thúc
+- Then: Hệ thống coi như tài xế A từ chối, loại khỏi danh sách đề xuất cho chuyến này và mời tài xế tiếp theo
+
+**AC10** — Thông báo khi không tìm được tài xế (liên quan UC04, UC26, EX03, EX06)
+- Given: Hệ thống đã mời hết danh sách tài xế phù hợp mà không ai chấp nhận, hoặc không có tài xế nào phù hợp từ đầu
+- When: Điều kiện trên xảy ra
+- Then: Hệ thống dừng tìm kiếm và gửi thông báo rõ ràng cho khách hàng rằng không tìm được tài xế
+
+**AC11** — Chỉ 1 tài xế được xác nhận khi có tranh chấp (liên quan UC14, EX07)
+- Given: Hai tài xế cùng bấm "chấp nhận" một chuyến gần như đồng thời
+- When: Hệ thống xử lý hai yêu cầu chấp nhận
+- Then: Chỉ tài xế có yêu cầu được ghi nhận trước được xác nhận cho chuyến; tài xế còn lại nhận thông báo "chuyến đã có tài xế khác nhận"
+
+## 3 Nhóm Thực hiện chuyến đi (BN07–BN09, BN17)
+
+**AC12** — Cập nhật trạng thái đúng thứ tự (liên quan UC15, BR07)
+- Given: Chuyến đang ở trạng thái "assigned"
+- When: Tài xế cố cập nhật trạng thái không theo đúng thứ tự quy định (vd: nhảy thẳng sang "hoàn thành" khi chưa "đón khách")
+- Then: Hệ thống từ chối cập nhật và yêu cầu thực hiện đúng tuần tự
+
+**AC13** — Khách hàng nhận thông báo khi tài xế đến điểm đón (liên quan UC15, UC09)
+- Given: Tài xế cập nhật trạng thái "đã đến điểm đón"
+- When: Cập nhật được ghi nhận thành công
+- Then: Hệ thống gửi thông báo ngay cho khách hàng
+
+**AC14** — Ghi nhận vị trí tài xế liên tục trong chuyến (liên quan UC05, BN09)
+- Given: Chuyến đang ở trạng thái "đang di chuyển"
+- When: Tài xế di chuyển
+- Then: Hệ thống ghi nhận vị trí tài xế định kỳ và khách hàng thấy được cập nhật trên màn hình theo dõi
+
+**AC15** — Xem lịch sử chuyến đầy đủ (liên quan UC06)
+- Given: Khách hàng có ít nhất một chuyến đã hoàn thành
+- When: Khách hàng mở màn hình lịch sử chuyến đi
+- Then: Hệ thống hiển thị đầy đủ danh sách chuyến với điểm đón, điểm đến, số tiền, tài xế, thời gian
+
+## 4 Nhóm Tính cước & Thanh toán (BN10–BN13)
+**AC16** — Chỉ tính cước khi chuyến đã hoàn thành (liên quan UC27, BR09)
+- Given: Chuyến chưa đạt trạng thái "hoàn thành"
+- When: Hệ thống hoặc người dùng cố kích hoạt tính cước
+- Then: Hệ thống không tính cước; chỉ tính cước ngay sau khi Trip.status chuyển thành "completed"
+
+**AC17** — Không lưu thông tin thẻ nhạy cảm (liên quan UC30, BR10)
+- Given: Khách hàng thanh toán bằng phương thức điện tử qua nhà cung cấp bên ngoài
+- When: Giao dịch được xử lý
+- Then: Hệ thống CAB chỉ lưu token/mã tham chiếu giao dịch, không lưu số thẻ hoặc thông tin tài khoản thanh toán gốc
+
+**AC18** — Không thu tiền trùng lặp (liên quan UC07, BR11)
+- Given: Một chuyến đã có giao dịch thanh toán ở trạng thái "success"
+- When: Có yêu cầu thanh toán lại cho cùng chuyến đó
+- Then: Hệ thống từ chối tạo giao dịch mới, chỉ cho phép một giao dịch thành công duy nhất trên mỗi chuyến
+
+**AC19** — Xử lý khi giao dịch điện tử thất bại (liên quan UC30, EX11)
+- Given: Khách hàng chọn thanh toán điện tử
+- When: Giao dịch từ Payment Gateway trả về kết quả thất bại
+- Then: Hệ thống thông báo lỗi cho khách hàng và cho phép thử lại hoặc đổi phương thức thanh toán khác, không trừ tiền
+
+**AC20** — Xử lý khi Payment Gateway không phản hồi (liên quan UC30, EX13)
+- Given: Hệ thống đã gửi yêu cầu thanh toán điện tử
+- When: Payment Gateway không phản hồi trong thời gian timeout quy định
+- Then: Hệ thống hiển thị thông báo lỗi tạm thời cho khách hàng và gợi ý phương thức thanh toán khác (vd: tiền mặt)
+
+## 5 Nhóm Thông báo (BN14, BN15)
+
+**AC21** — Gửi đúng và đủ thông báo theo sự kiện (liên quan UC28)
+- Given: Một sự kiện nghiệp vụ hợp lệ xảy ra (vd: tài xế nhận chuyến)
+- When: Sự kiện được hệ thống ghi nhận
+- Then: Hệ thống gửi đúng một thông báo tương ứng cho đúng người nhận (khách hàng hoặc tài xế), không gửi trùng lặp
+
+**AC22** — Retry khi gửi thông báo thất bại (liên quan UC28, EX14)
+- Given: Việc gửi thông báo lần đầu thất bại (lỗi kênh gửi)
+- When: Hệ thống phát hiện gửi thất bại
+- Then: Hệ thống tự động thử gửi lại theo số lần giới hạn đã cấu hình, không làm gián đoạn luồng nghiệp vụ chính của chuyến đi
+
+## 6 Nhóm Đánh giá tài xế (BN16)
+
+**AC23** — Chỉ được đánh giá sau khi thanh toán thành công (liên quan UC08, BR13)
+- Given: Chuyến chưa hoàn tất thanh toán (Payment.status ≠ success)
+- When: Hệ thống kiểm tra điều kiện hiển thị lời mời đánh giá
+- Then: Hệ thống không hiển thị lời mời đánh giá cho đến khi thanh toán thành công
+
+**AC24** — Mỗi chuyến chỉ đánh giá một lần (liên quan UC08, BR14)
+- Given: Chuyến đã có một Rating được lưu
+- When: Khách hàng cố gửi đánh giá lần thứ hai cho cùng chuyến
+- Then: Hệ thống từ chối, chỉ giữ lại đánh giá đầu tiên
+
+**AC25** — Cập nhật điểm trung bình tài xế sau đánh giá (liên quan UC08)
+- Given: Khách hàng gửi đánh giá hợp lệ (1–5 sao)
+- When: Hệ thống lưu Rating thành công
+- Then: Driver.average_rating được tính lại và cập nhật ngay
+
+## 7 Nhóm Quản trị & Vận hành (BN18–BN21)
+
+**AC26** — Chặn thao tác nhạy cảm với nhân viên không đủ quyền (liên quan UC19, UC20, BR15, EX16)
+- Given: Nhân viên vận hành không có quyền thực hiện thao tác nhạy cảm (vd: xóa dữ liệu giao dịch)
+- When: Nhân viên cố thực hiện thao tác đó
+- Then: Hệ thống từ chối thao tác, hiển thị thông báo không đủ quyền, và ghi log nỗ lực truy cập
+
+**AC27** — Hiển thị đúng danh sách chuyến đang diễn ra (liên quan UC21)
+- Given: Có các chuyến đang ở trạng thái khác "completed"/"cancelled"
+- When: Nhân viên vận hành mở màn hình giám sát
+- Then: Hệ thống hiển thị đầy đủ và chính xác danh sách các chuyến đang diễn ra kèm trạng thái tài xế
+
+**AC28** — Ghi log khi xử lý sự cố (liên quan UC22, BR16)
+- Given: Nhân viên vận hành thực hiện thao tác can thiệp vào một chuyến gặp sự cố
+- When: Thao tác được thực hiện thành công
+- Then: Hệ thống ghi lại đầy đủ vào Audit Log: ai thực hiện, hành động gì, đối tượng nào, thời gian nào
+
+**AC29** — Báo cáo vận hành chính xác theo khoảng thời gian (liên quan UC24)
+- Given: Có dữ liệu chuyến đi trong khoảng thời gian được chọn
+- When: Nhân viên vận hành tạo báo cáo cho khoảng thời gian đó
+- Then: Hệ thống hiển thị đúng số lượng chuyến, doanh thu, tỷ lệ hoàn thành/hủy và hiệu quả tài xế khớp với dữ liệu thực tế trong khoảng thời gian đó
+
+## 8 Nhóm Bảo mật & Dữ liệu (BN22–BN25)
+
+**AC30** — Chặn truy cập khi chưa xác thực (liên quan UC02, BR17, EX18)
+- Given: Người dùng chưa đăng nhập hoặc token đã hết hạn
+- When: Người dùng cố truy cập chức năng yêu cầu tài khoản
+- Then: Hệ thống chặn truy cập và chuyển hướng về màn hình đăng nhập
+
+**AC31** — Dữ liệu nhạy cảm được bảo vệ (liên quan BR18)
+- Given: Hệ thống lưu trữ và truyền tải dữ liệu cá nhân, vị trí, giao dịch
+- When: Dữ liệu được lưu vào cơ sở dữ liệu hoặc truyền qua mạng
+- Then: Dữ liệu được mã hóa khi lưu trữ và truyền tải qua kênh an toàn (HTTPS)
+## 9 Bảng tổng hợp liên kết AC → BN/UC
+
+| Nhóm AC | Business Requirement | Use Case liên quan |
+|---|---|---|
+| 13.1 (AC01–AC04) | BN01, BN02 | UC01, UC02, UC10–UC13 |
+| 13.2 (AC05–AC11) | BN03, BN04, BN05, BN06 | UC04, UC14, UC26 |
+| 13.3 (AC12–AC15) | BN07, BN08, BN09, BN17 | UC05, UC06, UC15 |
+| 13.4 (AC16–AC20) | BN10, BN11, BN12, BN13 | UC07, UC27, UC30 |
+| 13.5 (AC21–AC22) | BN14, BN15 | UC09, UC17, UC28 |
+| 13.6 (AC23–AC25) | BN16 | UC08 |
+| 13.7 (AC26–AC29) | BN18, BN19, BN20, BN21 | UC19–UC25 |
+| 13.8 (AC30–AC31) | BN22, BN23, BN24, BN25 | UC02, UC11, UC18 |
 
