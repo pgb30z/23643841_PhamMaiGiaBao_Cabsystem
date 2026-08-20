@@ -201,3 +201,122 @@ Hệ thống được định hướng có khả năng mở rộng, do đó các
 * Mở rộng chức năng báo cáo và phân tích.
 * Bổ sung các chức năng nghiệp vụ mới theo nhu cầu kinh doanh.
 * Thay đổi hoặc nâng cấp các thành phần kỹ thuật mà hạn chế ảnh hưởng đến các chức năng đang hoạt động.
+
+# 5.Phân tích yêu cầu khách hàng – Bước 1: Business Context
+
+**Dự án:** CAB System – Nền tảng đặt xe
+**Vai trò:** Business Analyst (BA)
+**Giai đoạn:** Sơ khởi (Inception) – Bước 1: Hiểu Business Context
+**Nguồn:** Tài liệu yêu cầu khách hàng (Customer Requirement)
+
+---
+
+## 1. Mục đích của bước này
+
+Trước khi đi vào phân tích chức năng chi tiết, BA cần hiểu **ngữ cảnh nghiệp vụ (Business Context)** — tức là: doanh nghiệp đang làm gì, đang gặp vấn đề gì, muốn đạt được điều gì, và hệ thống mới đóng vai trò gì trong bức tranh đó. Đây là nền tảng để các bước sau (xác định actor, use case, yêu cầu chức năng/phi chức năng...) không bị lệch hướng.
+
+---
+
+## 2. Thông tin nền (Background)
+
+| Hạng mục | Nội dung |
+|---|---|
+| Khách hàng | Công ty ABC – doanh nghiệp cung cấp dịch vụ đặt xe trực tuyến |
+| Sản phẩm | CAB System – nền tảng đặt xe mới |
+| Thời gian triển khai | 7 tuần |
+| Hiện trạng (As-is) | Đặt xe qua tổng đài hoặc app đơn giản; phân công tài xế thủ công |
+
+---
+
+## 3. Hiện trạng & Vấn đề (As-is & Pain Points)
+
+- Phân công tài xế chủ yếu **thủ công**, chưa tự động hóa.
+- Khách hàng **khó theo dõi trạng thái chuyến đi**.
+- Thông tin thanh toán **chưa được quản lý tập trung**.
+- Bộ phận vận hành **khó mở rộng hệ thống** khi quy mô tăng.
+
+---
+
+## 4. Mục tiêu doanh nghiệp (Business Goals)
+
+1. Xây dựng nền tảng có khả năng **phục vụ số lượng lớn** khách hàng và tài xế.
+2. Có khả năng **mở rộng thêm tính năng** trong tương lai (dịch vụ mới, phương thức thanh toán mới, kênh thông báo mới...).
+3. Đảm bảo **vận hành ổn định** ngay cả khi một thành phần (thanh toán, thông báo...) gặp sự cố — không làm sập toàn hệ thống.
+4. Cho phép **triển khai từng phần** tính năng mới mà không ảnh hưởng phần đang chạy.
+
+> Đây là tín hiệu cho thấy khách hàng không chỉ cần một app đặt xe đơn thuần, mà cần một **nền tảng (platform)** có kiến trúc linh hoạt, có thể mở rộng lâu dài — điều này ảnh hưởng đến cách BA đặt câu hỏi và cách kiến trúc sư thiết kế hệ thống sau này.
+
+---
+
+## 5. Các nhóm người dùng chính (High-level Actors)
+
+| Actor | Vai trò trong hệ thống |
+|---|---|
+| **Khách hàng (Customer)** | Đặt xe, theo dõi chuyến đi, thanh toán, đánh giá tài xế |
+| **Tài xế (Driver)** | Nhận/từ chối chuyến, cập nhật trạng thái chuyến, cập nhật vị trí |
+| **Nhân viên vận hành (Operator/Admin)** | Quản trị khách hàng, tài xế, phương tiện, chuyến đi; xử lý sự cố; xem báo cáo |
+| **Nhà cung cấp thanh toán bên ngoài** | Actor hệ thống (external system) xử lý giao dịch thanh toán điện tử |
+
+---
+
+## 6. Các luồng nghiệp vụ cốt lõi (Core Business Flows – mức tổng quan)
+
+1. Khách hàng tạo yêu cầu đặt xe → hệ thống tìm tài xế phù hợp.
+2. Tài xế nhận/từ chối chuyến → hệ thống điều phối lại nếu bị từ chối.
+3. Thực hiện chuyến đi → cập nhật trạng thái theo thời gian thực.
+4. Hoàn thành chuyến → tính cước → thanh toán (tiền mặt / điện tử).
+5. Thông báo xuyên suốt hành trình cho cả khách hàng và tài xế.
+6. Nhân viên vận hành giám sát, xử lý ngoại lệ, xem báo cáo.
+
+---
+
+## 7. Ràng buộc & Yếu tố phi chức năng ở mức khái niệm (Constraints)
+
+- **Bảo mật:** xác thực người dùng, phân quyền cho thao tác quản trị nhạy cảm, không lưu trực tiếp thông tin thanh toán nhạy cảm trong hệ thống CAB.
+- **Khả năng chịu tải:** hệ thống phải ổn định vào giờ cao điểm.
+- **Khả năng mở rộng độc lập:** các thành phần (thanh toán, thông báo, tìm tài xế...) nên tách rời để lỗi một phần không kéo sập toàn hệ thống — gợi ý hướng kiến trúc **microservices / loosely-coupled**.
+- **Audit trail:** cần lưu vết các thao tác quan trọng để phục vụ kiểm tra khi có sự cố.
+- **Thời gian:** chỉ 7 tuần triển khai — ràng buộc lớn về phạm vi (scope) MVP.
+
+---
+
+## 8. Những điểm chưa rõ – cần làm rõ với stakeholder (Open Questions)
+
+Khách hàng đã chủ động nêu các nội dung **chưa chốt**, đây là input quan trọng cho bước tiếp theo (Requirement Elicitation):
+
+- [ ] Cách tính cước chi tiết như thế nào?
+- [ ] Tiêu chí ưu tiên tài xế khi có nhiều tài xế phù hợp là gì?
+- [ ] Thời gian tối đa tài xế phải phản hồi một chuyến là bao lâu?
+- [ ] Chính sách hủy chuyến (ai được hủy, khi nào, có phí không)?
+- [ ] Xử lý ra sao khi tài xế/khách hàng mất kết nối mạng giữa chuyến?
+- [ ] Thời gian lưu trữ dữ liệu (chuyến đi, vị trí, giao dịch...) là bao lâu?
+
+> Đây chính là danh sách câu hỏi BA cần mang đi họp với stakeholder trước khi đội phát triển bắt tay vào thiết kế giải pháp.
+
+---
+
+## 9. Kỳ vọng của khách hàng đối với vai trò BA
+
+Theo tài liệu gốc, khách hàng kỳ vọng BA trong giai đoạn phân tích sẽ xác định rõ:
+
+- Phạm vi (Scope)
+- Tác nhân (Actors)
+- Quy trình nghiệp vụ (Business Process)
+- Yêu cầu chức năng (Functional Requirements)
+- Yêu cầu phi chức năng (Non-functional Requirements)
+- Quy tắc nghiệp vụ (Business Rules)
+- Trường hợp ngoại lệ (Exception Cases)
+- Các điểm chưa rõ cần xác nhận thêm
+
+---
+
+## 10. Bước tiếp theo (Next Steps)
+
+Sau khi đã nắm được Business Context, các bước tiếp theo trong quy trình BA thường là:
+
+1. Xác định phạm vi chi tiết (Scope Definition)
+2. Vẽ sơ đồ Actor & Use Case tổng quan
+3. Đặc tả quy trình nghiệp vụ (Business Process Modeling – BPMN)
+4. Thu thập & đặc tả yêu cầu chức năng / phi chức năng chi tiết
+5. Xác định quy tắc nghiệp vụ & trường hợp ngoại lệ
+6. Tổ chức buổi làm rõ yêu cầu (requirement clarification) với stakeholder cho các mục ở mục 8
