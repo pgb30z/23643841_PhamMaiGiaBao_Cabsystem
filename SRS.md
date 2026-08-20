@@ -247,7 +247,7 @@ Mỗi BR được đặt mã theo quy tắc: **BR + số thứ tự 2 chữ số
 | **BR21** | Kiến trúc mở rộng linh hoạt | Hệ thống phải có khả năng mở rộng độc lập theo tải, triển khai từng phần và bổ sung dịch vụ mới, phương thức thanh toán mới, kênh thông báo mới mà không cần xây dựng lại toàn bộ. |
 
 ---
-#### Bước 6: Xây dựng Business Process (Quy trình nghiệp vụ)
+# 6: Xây dựng Business Process (Quy trình nghiệp vụ)
 
 Từ danh sách Business Requirements (BR01–BR37) đã xác nhận với khách hàng ở Bước 5, tiến hành mô hình hóa thành các **Business Process (BP)** — mô tả luồng thực hiện từng bước, bao gồm cả **luồng chính (Main Flow)**, **luồng phụ (Alternative Flow)** và **luồng ngoại lệ (Exception Flow)**. Mỗi BP là cơ sở để thiết kế Use Case chi tiết ở bước sau.
 
