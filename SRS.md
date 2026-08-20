@@ -1026,7 +1026,7 @@ NFR phải **thực tế, phù hợp với quy mô và thời gian dự án (7 t
 
 # 11 và 12. Xác định và vẽ các Usecase(UC) - Đặc tả Usecase (Specification)
 
-## 11.1. Xác định Actors
+## 1. Xác định Actors
 
 | Actor | Vai trò |
 |---|---|
@@ -1037,7 +1037,7 @@ NFR phải **thực tế, phù hợp với quy mô và thời gian dự án (7 t
 | **Payment Provider** | Xử lý và trả kết quả giao dịch thanh toán điện tử. |
 | **Notification Provider** | Gửi thông báo đến khách hàng và tài xế. |
 
-## 11.2. Danh sách Use Case chính
+## 2. Danh sách Use Case chính
 
 | ID | Use Case | Actor chính |
 |---|---|---|
@@ -1067,7 +1067,7 @@ NFR phải **thực tế, phù hợp với quy mô và thời gian dự án (7 t
 | **UC24** | Quản lý phân quyền | Operation Staff |
 | **UC25** | Lưu vết thao tác | System |
 
-## 11.3. Use Case Diagram
+## 3. Use Case Diagram
 
 ```mermaid
 flowchart LR
@@ -1153,7 +1153,7 @@ flowchart LR
     UC10 -.->|include| UC15
 ```
 ---
-## 11.4. Use Case Specification – Đặc tả Use Case
+## 4. Use Case Specification – Đặc tả Use Case
 
 ### UC01 – Đăng ký tài khoản
 
