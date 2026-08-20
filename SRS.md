@@ -751,3 +751,219 @@ Quy ước mã: **RULE + số thứ tự** cho Business Rule, **EX + số thứ 
 - [ ] Chính sách khi tài xế mất kết nối giữa chuyến (EX05).
 - [ ] Chính sách huỷ chuyến — phí huỷ, mốc thời gian áp dụng (EX07).
 - [ ] Số lần thử lại tối đa khi thanh toán điện tử thất bại (EX06).
+
+# 9: Data Modelling – Xác định thực thể & Sơ đồ ERD
+
+**Dự án:** CAB System – Nền tảng đặt xe
+**Vai trò:** Business Analyst (BA)
+
+---
+
+## 1. Mục đích bước này
+
+Từ toàn bộ BR (bước 5), BP (bước 6), FR (bước 7) và Business Rule/Exception (bước 8), BA nhìn lại để **xác định các thực thể (Entity)** mà hệ thống cần quản lý — mỗi thực thể là một "đối tượng nghiệp vụ" có dữ liệu cần lưu trữ. Sau đó xác định **thuộc tính (attribute)** và **mối quan hệ (relationship)** giữa các thực thể, thể hiện qua **sơ đồ ERD (Entity Relationship Diagram)**.
+
+> Đây vẫn là mô hình ở mức khái niệm/logic (Conceptual/Logical Data Model) phục vụ BA và đội thiết kế hiểu nghiệp vụ — chưa phải thiết kế database vật lý (kiểu dữ liệu cụ thể, index, chuẩn hoá...) do đội kỹ thuật đảm nhiệm sau này.
+
+---
+
+## 2. Cách xác định thực thể
+
+Nguyên tắc: mỗi **danh từ nghiệp vụ quan trọng** xuất hiện lặp lại trong BR/BP/FR — thứ mà hệ thống cần "nhớ" qua thời gian — là ứng viên cho một Entity. Ví dụ:
+
+- BR01, BP01 → khách hàng tạo **chuyến đi** → Entity `TRIP`
+- BR02 → **khách hàng** đăng ký tài khoản → Entity `CUSTOMER`
+- BR03 → **tài xế**, **phương tiện** → Entity `DRIVER`, `VEHICLE`
+- BR04, FR (bán kính, loại xe, rating) → cần biết **loại xe** → Entity `VEHICLE_TYPE`; cần **vị trí tài xế** → Entity `DRIVER_LOCATION`
+- BR06, BP02 → chuyến đi có nhiều **mốc trạng thái** theo thời gian → Entity `TRIP_STATUS_LOG`
+- BR08, BR09, BR10 → **thanh toán** → Entity `PAYMENT`
+- BR11 → **đánh giá** sau chuyến → Entity `RATING`
+- BR12, BR13 → **thông báo** → Entity `NOTIFICATION`
+- BR14, BR15 → **nhân viên vận hành**, **vai trò/quyền** → Entity `OPERATOR`, `ROLE`
+- BR19 → lưu vết thao tác → Entity `AUDIT_LOG`
+
+---
+
+## 3. Danh sách thực thể (Entities)
+
+| Entity | Mô tả | Nguồn gốc (BR/FR) |
+|---|---|---|
+| **CUSTOMER** | Khách hàng sử dụng dịch vụ | BR02 |
+| **DRIVER** | Tài xế | BR03 |
+| **VEHICLE** | Phương tiện của tài xế | BR03 |
+| **VEHICLE_TYPE** | Loại xe (4 chỗ, 7 chỗ...) | BR04-FR03 |
+| **DRIVER_LOCATION** | Vị trí hiện tại/lịch sử vị trí của tài xế | BR07, BR04-FR01/FR02 |
+| **TRIP** | Một chuyến đi | BR01, BR04, BR05, BR06 |
+| **TRIP_STATUS_LOG** | Lịch sử thay đổi trạng thái của một chuyến | BR06-FR01 |
+| **PAYMENT** | Giao dịch thanh toán của một chuyến | BR08, BR09, BR10 |
+| **RATING** | Đánh giá của khách hàng cho tài xế sau chuyến | BR11 |
+| **NOTIFICATION** | Thông báo gửi cho khách hàng/tài xế | BR12, BR13 |
+| **OPERATOR** | Nhân viên vận hành (admin) | BR14 |
+| **ROLE** | Vai trò/nhóm quyền của nhân viên vận hành | BR15 |
+| **AUDIT_LOG** | Nhật ký các thao tác quan trọng | BR19 |
+
+---
+
+## 4. Thuộc tính chính của từng thực thể (mức khái niệm)
+
+| Entity | Thuộc tính chính |
+|---|---|
+| CUSTOMER | customer_id (PK), full_name, phone, email, password, created_at |
+| DRIVER | driver_id (PK), full_name, phone, email, password, status (online/offline/busy), rating_avg, created_at |
+| VEHICLE | vehicle_id (PK), driver_id (FK), vehicle_type_id (FK), license_plate, model, color |
+| VEHICLE_TYPE | vehicle_type_id (PK), name, description |
+| DRIVER_LOCATION | location_id (PK), driver_id (FK), latitude, longitude, updated_at |
+| TRIP | trip_id (PK), customer_id (FK), driver_id (FK, nullable), vehicle_type_id (FK), pickup_location, dropoff_location, status, fare_amount, requested_at, completed_at |
+| TRIP_STATUS_LOG | log_id (PK), trip_id (FK), status, changed_at |
+| PAYMENT | payment_id (PK), trip_id (FK), amount, method (cash/e-payment), status, transaction_ref, paid_at |
+| RATING | rating_id (PK), trip_id (FK), customer_id (FK), driver_id (FK), score, comment, created_at |
+| NOTIFICATION | notification_id (PK), recipient_type, recipient_id, trip_id (FK, nullable), message, channel, sent_at, status |
+| OPERATOR | operator_id (PK), full_name, email, password, role_id (FK), created_at |
+| ROLE | role_id (PK), name, permissions |
+| AUDIT_LOG | audit_id (PK), operator_id (FK), action, target_entity, target_id, created_at |
+
+---
+
+## 5. Mối quan hệ giữa các thực thể (Relationships)
+
+| Quan hệ | Bản chất (cardinality) | Diễn giải |
+|---|---|---|
+| CUSTOMER — TRIP | 1 — N | Một khách hàng có thể tạo nhiều chuyến đi |
+| DRIVER — TRIP | 1 — N (0..1 cho tới khi được gán) | Một tài xế có thể thực hiện nhiều chuyến, một chuyến chỉ do một tài xế đảm nhận |
+| DRIVER — VEHICLE | 1 — N | Một tài xế có thể có (đăng ký) một hoặc nhiều phương tiện |
+| VEHICLE_TYPE — VEHICLE | 1 — N | Một loại xe áp dụng cho nhiều phương tiện |
+| VEHICLE_TYPE — TRIP | 1 — N | Một loại xe được chọn cho nhiều chuyến đi |
+| DRIVER — DRIVER_LOCATION | 1 — N | Một tài xế có nhiều bản ghi vị trí theo thời gian (lịch sử di chuyển) |
+| TRIP — TRIP_STATUS_LOG | 1 — N | Một chuyến đi có nhiều mốc thay đổi trạng thái |
+| TRIP — PAYMENT | 1 — N | Một chuyến có thể có nhiều lần thử giao dịch thanh toán (do EX06 – thất bại thử lại), nhưng chỉ một giao dịch thành công cuối cùng |
+| TRIP — RATING | 1 — 0..1 | Một chuyến có tối đa một đánh giá (có thể bỏ qua) |
+| CUSTOMER — RATING | 1 — N | Một khách hàng có thể để lại nhiều đánh giá (mỗi chuyến một lần) |
+| DRIVER — RATING | 1 — N | Một tài xế nhận nhiều đánh giá từ các chuyến khác nhau |
+| CUSTOMER — NOTIFICATION | 1 — N | Một khách hàng nhận nhiều thông báo |
+| DRIVER — NOTIFICATION | 1 — N | Một tài xế nhận nhiều thông báo |
+| TRIP — NOTIFICATION | 1 — N | Một chuyến đi phát sinh nhiều thông báo liên quan |
+| ROLE — OPERATOR | 1 — N | Một vai trò áp dụng cho nhiều nhân viên vận hành |
+| OPERATOR — AUDIT_LOG | 1 — N | Một nhân viên thực hiện nhiều thao tác được ghi log |
+
+---
+
+## 6. Sơ đồ ERD
+
+```mermaid
+erDiagram
+    CUSTOMER ||--o{ TRIP : "tạo"
+    DRIVER ||--o{ TRIP : "thực hiện"
+    DRIVER ||--o{ VEHICLE : "sở hữu"
+    VEHICLE_TYPE ||--o{ VEHICLE : "phân loại"
+    VEHICLE_TYPE ||--o{ TRIP : "được chọn cho"
+    DRIVER ||--o{ DRIVER_LOCATION : "cập nhật"
+    TRIP ||--o{ TRIP_STATUS_LOG : "có lịch sử"
+    TRIP ||--o{ PAYMENT : "phát sinh"
+    TRIP ||--o| RATING : "được đánh giá"
+    CUSTOMER ||--o{ RATING : "đưa ra"
+    DRIVER ||--o{ RATING : "nhận"
+    CUSTOMER ||--o{ NOTIFICATION : "nhận"
+    DRIVER ||--o{ NOTIFICATION : "nhận"
+    TRIP ||--o{ NOTIFICATION : "liên quan tới"
+    ROLE ||--o{ OPERATOR : "gán cho"
+    OPERATOR ||--o{ AUDIT_LOG : "thực hiện"
+
+    CUSTOMER {
+        int customer_id PK
+        string full_name
+        string phone
+        string email
+        datetime created_at
+    }
+    DRIVER {
+        int driver_id PK
+        string full_name
+        string phone
+        string status
+        float rating_avg
+    }
+    VEHICLE {
+        int vehicle_id PK
+        int driver_id FK
+        int vehicle_type_id FK
+        string license_plate
+    }
+    VEHICLE_TYPE {
+        int vehicle_type_id PK
+        string name
+    }
+    DRIVER_LOCATION {
+        int location_id PK
+        int driver_id FK
+        float latitude
+        float longitude
+        datetime updated_at
+    }
+    TRIP {
+        int trip_id PK
+        int customer_id FK
+        int driver_id FK
+        int vehicle_type_id FK
+        string pickup_location
+        string dropoff_location
+        string status
+        decimal fare_amount
+        datetime requested_at
+    }
+    TRIP_STATUS_LOG {
+        int log_id PK
+        int trip_id FK
+        string status
+        datetime changed_at
+    }
+    PAYMENT {
+        int payment_id PK
+        int trip_id FK
+        decimal amount
+        string method
+        string status
+    }
+    RATING {
+        int rating_id PK
+        int trip_id FK
+        int customer_id FK
+        int driver_id FK
+        int score
+        string comment
+    }
+    NOTIFICATION {
+        int notification_id PK
+        string recipient_type
+        int recipient_id
+        int trip_id FK
+        string message
+        string channel
+    }
+    OPERATOR {
+        int operator_id PK
+        string full_name
+        int role_id FK
+    }
+    ROLE {
+        int role_id PK
+        string name
+    }
+    AUDIT_LOG {
+        int audit_id PK
+        int operator_id FK
+        string action
+        string target_entity
+        datetime created_at
+    }
+```
+
+---
+
+## 7. Ghi chú & điểm cần lưu ý khi thiết kế chi tiết hơn
+
+- **DRIVER_LOCATION** thiết kế dạng lịch sử (nhiều bản ghi theo thời gian) để hỗ trợ vừa lấy vị trí hiện tại (bản ghi mới nhất), vừa phục vụ phân tích sau này; nếu chỉ cần vị trí hiện tại, đội kỹ thuật có thể tối ưu thành 1–1 (bảng riêng "vị trí hiện tại" + bảng lịch sử tách biệt).
+- **PAYMENT** thiết kế 1–N với TRIP để phản ánh đúng exception EX06 (thanh toán thất bại → thử lại nhiều lần); cần có cờ đánh dấu giao dịch nào là "kết quả cuối cùng" của chuyến.
+- **RATING** là quan hệ 1–0..1 với TRIP vì đánh giá là tùy chọn (RULE09: chỉ đánh giá được sau khi chuyến hoàn thành và thanh toán xong).
+- Thực thể **AUDIT_LOG** phục vụ trực tiếp BR19 (lưu vết) và RULE10 (kiểm soát thao tác nhạy cảm).
+- Mô hình này **chưa bao gồm** các bảng phụ trợ như cấu hình hệ thống, log kỹ thuật, hàng đợi thông báo (message queue) — đó là chi tiết thiết kế kỹ thuật, nằm ngoài phạm vi Data Model nghiệp vụ của BA.
+- Một số thuộc tính (ví dụ công thức fare_amount, bán kính tìm kiếm dùng ở DRIVER_LOCATION) vẫn phụ thuộc vào các thông số **chưa được khách hàng chốt** (đã liệt kê ở Bước 8, mục 5) — cần cập nhật lại model này sau khi có xác nhận.
