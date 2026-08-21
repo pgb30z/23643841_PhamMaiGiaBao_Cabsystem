@@ -1456,6 +1456,55 @@ flowchart LR
 - **Hậu điều kiện:** Đánh giá tài xế được lưu.
 
 ---
+# 13. Truy xuất nguồn gốc yêu cầu - Requirements Traceability - Tạo bảng ma trận truy xuất yêu cầu - Requirements Traceability Matrix - RTM - Các cột: BG - BR - FR - UC - AC - TC(Test Case)
+
+## 1. Requirements Traceability Matrix – RTM
+
+| BG | BR | FR | UC | AC | TC |
+|---|---|---|---|---|---|
+| BG01 | BR01 | FR01, FR02, FR03 | UC06 | AC03 | TC01, TC02 |
+| BG01 | BR02 | FR04, FR05, FR06 | UC07 | AC04 | TC03, TC04, TC05 |
+| BG01 | BR03 | FR07, FR08 | UC08, UC09 | AC05 | TC06, TC07 |
+| BG02 | BR04 | FR09, FR10, FR11 | UC10, UC11 | AC06, AC07 | TC08, TC09 |
+| BG02 | BR05 | FR12, FR13 | UC12 | AC08 | TC10 |
+| BG03 | BR06 | FR14, FR15, FR16 | UC13, UC14 | AC09 | TC11, TC12, TC13 |
+| BG04 | BR07 | FR17, FR18 | UC15 | AC10 | TC14, TC15 |
+| BG02 | BR08 | FR19 | UC16 | AC11 | TC16 |
+| BG02 | BR09 | FR20 | UC17 | AC12 | TC17, TC18 |
+| BG04 | BR10 | FR21, FR22, FR23 | UC18, UC19 | AC15 | TC19, TC20 |
+| BG04 | BR11 | FR24, FR25 | UC20, UC21 | AC13, AC14 | TC21, TC22 |
+| BG05 | BR12 | FR26 | UC22 | AC16 | TC23 |
+| BG05 | BR13 | FR27, FR28, FR29, FR30 | UC23 | AC17 | TC24, TC25 |
+| BG06 | BR14 | FR31, FR32 | UC24 | AC18 | TC26, TC27 |
+| BG03 | BR15 | FR33 | UC14 | AC19 | TC28 |
+| BG06 | BR16 | FR34, FR35 | UC25 | AC20 | TC29 |
+| BG07 | BR17 | FR36, FR37, FR38 | UC07, UC13, UC15 | AC20 | TC30, TC31, TC32 |
+
+## 2. Ý nghĩa các cột trong RTM
+
+| Cột | Ý nghĩa |
+|---|---|
+| **BG** | Business Goal – Mục tiêu kinh doanh |
+| **BR** | Business Requirement – Yêu cầu nghiệp vụ |
+| **FR** | Functional Requirement – Yêu cầu chức năng |
+| **UC** | Use Case – Chức năng/nghiệp vụ được mô tả trong Use Case |
+| **AC** | Acceptance Criteria – Tiêu chí nghiệm thu |
+| **TC** | Test Case – Ca kiểm thử dùng để kiểm tra yêu cầu |
+
+## 3. Nguyên tắc truy xuất
+
+Mỗi yêu cầu cần có khả năng truy xuất theo chuỗi:
+
+**Business Goal → Business Requirement → Functional Requirement → Use Case → Acceptance Criteria → Test Case**
+
+Việc truy xuất giúp đảm bảo:
+
+- Mỗi Business Goal đều được cụ thể hóa thành các Business Requirement.
+- Mỗi Business Requirement được chuyển thành một hoặc nhiều Functional Requirement.
+- Functional Requirement được mô tả và thực hiện thông qua các Use Case.
+- Mỗi Use Case có Acceptance Criteria để xác định điều kiện nghiệm thu.
+- Acceptance Criteria được kiểm chứng bằng các Test Case.
+- Không có yêu cầu quan trọng nào bị bỏ sót trong quá trình phân tích, phát triển và kiểm thử.
 
 ### UC18 – Quản lý chuyến đi
 
@@ -1586,7 +1635,7 @@ flowchart LR
   4. Dữ liệu được lưu để phục vụ kiểm tra.
 - **Hậu điều kiện:** Thao tác được ghi nhận vào nhật ký hệ thống.
 
-# 13: Xác định Tiêu chí chấp nhận (Acceptance Criteria - AC)
+# 14: Xác định Tiêu chí chấp nhận (Acceptance Criteria - AC)
 
 Acceptance Criteria là tập hợp các điều kiện và nguyên tắc cụ thể mà một tính năng phải đáp ứng, giúp đội phát triển và khách hàng xác định rõ **khi nào một Business Requirement được coi là hoàn thành và có thể nghiệm thu**. Mỗi AC được viết theo cấu trúc **Given – When – Then** và gắn với mã BN/UC tương ứng.
 
