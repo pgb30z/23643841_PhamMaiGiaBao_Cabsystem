@@ -1,0 +1,286 @@
+# Nhóm endpoint: admin
+paths:
+  /admin/customers:
+    get:
+      description: FR67 - Nhân viên vận hành quản lý thông tin khách hàng (UC20).
+      operationId: adminListCustomers
+      parameters:
+      - in: query
+        name: searchString
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: skip
+        required: false
+        schema:
+          minimum: 0
+          type: integer
+      - in: query
+        name: limit
+        required: false
+        schema:
+          maximum: 50
+          minimum: 0
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: ../components/schemas.yaml#/Customer
+                type: array
+          description: Danh sách khách hàng
+      security:
+      - bearerAuth: []
+      summary: Quản lý danh sách khách hàng (Operation Staff)
+      tags:
+      - admin
+  /admin/drivers:
+    get:
+      description: FR68 - Nhân viên vận hành quản lý và tra cứu hồ sơ tài xế (UC21).
+      operationId: adminListDrivers
+      parameters:
+      - in: query
+        name: searchString
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: status
+        required: false
+        schema:
+          enum:
+          - available
+          - unavailable
+          - on_trip
+          type: string
+      - in: query
+        name: skip
+        required: false
+        schema:
+          minimum: 0
+          type: integer
+      - in: query
+        name: limit
+        required: false
+        schema:
+          maximum: 50
+          minimum: 0
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: ../components/schemas.yaml#/Driver
+                type: array
+          description: Danh sách tài xế
+      security:
+      - bearerAuth: []
+      summary: Quản lý danh sách tài xế (Operation Staff)
+      tags:
+      - admin
+  /admin/operators/{operatorId}/role:
+    put:
+      description: 'FR75-FR77 - Kiểm soát quyền truy cập chức năng quản trị (RULE10,
+        UC24).
+
+        AC26 - Hệ thống kiểm tra quyền của người thực hiện trước khi cho phép thay
+        đổi.
+
+        '
+      operationId: updateOperatorRole
+      parameters:
+      - in: path
+        name: operatorId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                roleId:
+                  format: uuid
+                  type: string
+              required:
+              - roleId
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/Operator
+          description: Quyền được cập nhật
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: Người thực hiện không có quyền quản lý phân quyền
+      security:
+      - bearerAuth: []
+      summary: Cập nhật phân quyền cho nhân viên vận hành
+      tags:
+      - admin
+  /admin/roles:
+    get:
+      description: FR75-FR77 - Xem các Role và quyền tương ứng (UC24).
+      operationId: adminListRoles
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: ../components/schemas.yaml#/Role
+                type: array
+          description: Danh sách vai trò
+      security:
+      - bearerAuth: []
+      summary: Xem danh sách vai trò & quyền (Operation Staff)
+      tags:
+      - admin
+  /admin/transactions:
+    get:
+      description: FR74 - Nhân viên vận hành tra cứu lịch sử giao dịch (UC22).
+      operationId: adminSearchTransactions
+      parameters:
+      - in: query
+        name: tripId
+        required: false
+        schema:
+          format: uuid
+          type: string
+      - in: query
+        name: status
+        required: false
+        schema:
+          enum:
+          - pending
+          - success
+          - failed
+          type: string
+      - in: query
+        name: skip
+        required: false
+        schema:
+          minimum: 0
+          type: integer
+      - in: query
+        name: limit
+        required: false
+        schema:
+          maximum: 50
+          minimum: 0
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: ../components/schemas.yaml#/Payment
+                type: array
+          description: Danh sách giao dịch
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: Không có quyền truy cập
+      security:
+      - bearerAuth: []
+      summary: Tra cứu lịch sử giao dịch thanh toán (Operation Staff)
+      tags:
+      - admin
+  /admin/trips:
+    get:
+      description: 'FR70, FR71 - Nhân viên vận hành xem danh sách chuyến đang diễn
+        ra
+
+        và trạng thái tương ứng (UC18).
+
+        AC27 - Hiển thị đầy đủ và chính xác danh sách chuyến đang diễn ra
+
+        kèm trạng thái tài xế.
+
+        '
+      operationId: adminListTrips
+      parameters:
+      - in: query
+        name: status
+        required: false
+        schema:
+          $ref: ../components/schemas.yaml#/TripStatus
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: ../components/schemas.yaml#/Trip
+                type: array
+          description: Danh sách chuyến đi
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: AC26 - Không đủ quyền truy cập
+      security:
+      - bearerAuth: []
+      summary: Quản lý & theo dõi danh sách chuyến đi (Operation Staff)
+      tags:
+      - admin
+  /admin/trips/{tripId}/incident:
+    post:
+      description: 'FR73 - Nhân viên vận hành can thiệp thủ công vào chuyến gặp sự
+        cố:
+
+        gán lại tài xế, cập nhật trạng thái, hủy chuyến, ghi chú sự cố (BP08, UC19).
+
+        AC26 - Thao tác nhạy cảm bị chặn nếu nhân viên không đủ quyền.
+
+        AC28 - Mọi thao tác xử lý sự cố được ghi vào Audit Log.
+
+        '
+      operationId: handleTripIncident
+      parameters:
+      - in: path
+        name: tripId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas.yaml#/TripIncidentRequest
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/Trip
+          description: Sự cố được xử lý, thao tác được ghi log
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: AC26 - Nhân viên không đủ quyền thực hiện thao tác nhạy cảm
+      security:
+      - bearerAuth: []
+      summary: Xử lý sự cố chuyến đi (Operation Staff)
+      tags:
+      - admin

@@ -1,0 +1,91 @@
+# Nhóm endpoint: history-rating
+paths:
+  /customers/me/trips:
+    get:
+      description: 'FR62, FR63 - Khách hàng xem lại danh sách chuyến đã thực hiện,
+        kèm
+
+        số tiền phải trả (UC16).
+
+        AC15 - Hiển thị đầy đủ điểm đón, điểm đến, số tiền, tài xế, thời gian.
+
+        '
+      operationId: getMyTripHistory
+      parameters:
+      - in: query
+        name: skip
+        required: false
+        schema:
+          minimum: 0
+          type: integer
+      - in: query
+        name: limit
+        required: false
+        schema:
+          maximum: 50
+          minimum: 0
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: ../components/schemas.yaml#/Trip
+                type: array
+          description: Danh sách lịch sử chuyến đi
+      security:
+      - bearerAuth: []
+      summary: Xem lịch sử chuyến đi của khách hàng
+      tags:
+      - history-rating
+  /trips/{tripId}/rating:
+    post:
+      description: 'FR64, FR65 - Khách hàng đánh giá tài xế sau khi chuyến hoàn thành
+        (UC17).
+
+        RULE09/AC23 - Chỉ được đánh giá sau khi chuyến hoàn thành VÀ đã thanh
+
+        toán thành công.
+
+        AC24 - Mỗi chuyến chỉ được đánh giá một lần.
+
+        AC25 - Điểm trung bình của tài xế được cập nhật ngay sau khi lưu đánh giá.
+
+        '
+      operationId: rateDriver
+      parameters:
+      - in: path
+        name: tripId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas.yaml#/CreateRatingRequest
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/Rating
+          description: Đánh giá được lưu
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: 'AC23 - Chuyến chưa thanh toán thành công, hoặc
+
+            AC24 - Chuyến đã được đánh giá trước đó
+
+            '
+      security:
+      - bearerAuth: []
+      summary: Đánh giá tài xế sau chuyến đi
+      tags:
+      - history-rating

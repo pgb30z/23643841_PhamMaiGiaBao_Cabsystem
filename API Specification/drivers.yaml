@@ -1,0 +1,153 @@
+# Nhóm endpoint: drivers
+paths:
+  /drivers/me:
+    get:
+      description: FR06, FR08 - Tài xế xem hồ sơ của chính mình.
+      operationId: getMyDriverProfile
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/Driver
+          description: Hồ sơ tài xế
+      security:
+      - bearerAuth: []
+      summary: Xem hồ sơ tài xế hiện tại
+      tags:
+      - drivers
+    put:
+      description: FR08 - Tài xế cập nhật thông tin hồ sơ theo quyền được cấp.
+      operationId: updateMyDriverProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas.yaml#/DriverUpdateRequest
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/Driver
+          description: Hồ sơ tài xế được cập nhật
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: Thông tin không hợp lệ
+      security:
+      - bearerAuth: []
+      summary: Cập nhật hồ sơ tài xế
+      tags:
+      - drivers
+  /drivers/me/location:
+    put:
+      description: 'FR10, FR40 - Ghi nhận vị trí tài xế để phục vụ tìm kiếm tài xế
+
+        và ước tính thời gian đến (FR42).
+
+        AC14 - Vị trí được ghi nhận định kỳ trong khi chuyến "đang di chuyển".
+
+        '
+      operationId: updateMyDriverLocation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas.yaml#/LocationUpdateRequest
+        required: true
+      responses:
+        '200':
+          description: Vị trí được ghi nhận
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: Dữ liệu vị trí không hợp lệ
+      security:
+      - bearerAuth: []
+      summary: Cập nhật vị trí hiện tại của tài xế
+      tags:
+      - drivers
+  /drivers/me/status:
+    put:
+      description: 'FR09 - Tài xế chuyển trạng thái sẵn sàng/không sẵn sàng nhận chuyến.
+
+        AC04 - Hệ thống chặn chuyển sang "available" nếu hồ sơ/phương tiện
+
+        chưa khai báo đầy đủ (EX chưa đủ điều kiện hoạt động).
+
+        '
+      operationId: updateMyDriverStatus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                status:
+                  enum:
+                  - available
+                  - unavailable
+                  example: available
+                  type: string
+              required:
+              - status
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/Driver
+          description: Trạng thái tài xế được cập nhật
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: Không đủ điều kiện chuyển sang trạng thái sẵn sàng (hồ sơ/phương
+            tiện chưa đầy đủ)
+      security:
+      - bearerAuth: []
+      summary: Cập nhật trạng thái sẵn sàng của tài xế
+      tags:
+      - drivers
+  /drivers/me/vehicle:
+    put:
+      description: 'FR07, FR08 - Quản lý/cập nhật thông tin phương tiện.
+
+        AC04 - Nếu hồ sơ phương tiện chưa đầy đủ, tài xế sẽ bị chặn khi
+
+        cố chuyển sang trạng thái sẵn sàng (xem /drivers/me/status).
+
+        '
+      operationId: updateMyVehicle
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas.yaml#/VehicleUpdateRequest
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/Vehicle
+          description: Thông tin phương tiện được cập nhật
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: Thông tin phương tiện không hợp lệ
+      security:
+      - bearerAuth: []
+      summary: Cập nhật thông tin phương tiện của tài xế
+      tags:
+      - drivers

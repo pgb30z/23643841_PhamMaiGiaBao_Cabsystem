@@ -1,0 +1,346 @@
+# Nhóm endpoint: trips
+paths:
+  /trips:
+    get:
+      description: Dùng chung cho khách hàng (chuyến của mình) và nhân viên vận hành
+        (FR70, FR71).
+      operationId: listTrips
+      parameters:
+      - description: Lọc theo trạng thái chuyến
+        in: query
+        name: status
+        required: false
+        schema:
+          $ref: ../components/schemas.yaml#/TripStatus
+      - in: query
+        name: customerId
+        required: false
+        schema:
+          format: uuid
+          type: string
+      - in: query
+        name: driverId
+        required: false
+        schema:
+          format: uuid
+          type: string
+      - in: query
+        name: skip
+        required: false
+        schema:
+          format: int32
+          minimum: 0
+          type: integer
+      - in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          maximum: 50
+          minimum: 0
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: ../components/schemas.yaml#/Trip
+                type: array
+          description: Danh sách chuyến đi
+      security:
+      - bearerAuth: []
+      summary: Tìm kiếm/liệt kê chuyến đi
+      tags:
+      - trips
+    post:
+      description: 'FR11-FR15 - Khách hàng nhập điểm đón, điểm đến, loại xe và gửi
+        yêu cầu
+
+        đặt chuyến. Hệ thống ghi nhận yêu cầu (trạng thái "searching") và
+
+        bắt đầu quy trình tìm tài xế (BP01/BP02).
+
+        AC05 - Tạo bản ghi Trip thành công với trạng thái "searching".
+
+        '
+      operationId: createTrip
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas.yaml#/CreateTripRequest
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/Trip
+          description: Yêu cầu đặt chuyến được tạo, hệ thống bắt đầu tìm tài xế
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: Thông tin chuyến không hợp lệ
+      security:
+      - bearerAuth: []
+      summary: Tạo yêu cầu đặt chuyến
+      tags:
+      - trips
+  /trips/{tripId}:
+    get:
+      description: 'FR31-FR34 - Khách hàng theo dõi thông tin tài xế, thời gian dự
+        kiến
+
+        đến, và trạng thái hiện tại của chuyến theo thời gian thực (UC10).
+
+        '
+      operationId: getTripById
+      parameters:
+      - in: path
+        name: tripId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/Trip
+          description: Thông tin chi tiết chuyến đi
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: Không tìm thấy chuyến đi
+      security:
+      - bearerAuth: []
+      summary: Xem chi tiết / theo dõi trạng thái chuyến đi
+      tags:
+      - trips
+  /trips/{tripId}/cancel:
+    post:
+      description: 'Luồng phụ BP01/BP03 - Khách hàng hủy yêu cầu trước hoặc sau khi
+        có
+
+        tài xế nhận (chính sách phí hủy - Open Question, cần xác nhận thêm).
+
+        '
+      operationId: cancelTrip
+      parameters:
+      - in: path
+        name: tripId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                reason:
+                  example: Khách hàng đổi kế hoạch
+                  type: string
+              type: object
+        required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/Trip
+          description: Chuyến đi được hủy
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: Chuyến đi không ở trạng thái có thể hủy (ví dụ đã hoàn thành)
+      security:
+      - bearerAuth: []
+      summary: Hủy chuyến đi
+      tags:
+      - trips
+  /trips/{tripId}/matching/offers:
+    post:
+      description: 'FR16-FR21 - Xác định vị trí khách hàng, lọc tài xế sẵn sàng/phù
+        hợp
+
+        loại xe, ưu tiên tài xế gần và theo tiêu chí vận hành, gửi lời mời
+
+        đến tài xế được chọn (BP02).
+
+        AC06, AC07 - Chỉ đề xuất tài xế đang sẵn sàng và chưa nhận chuyến khác.
+
+        '
+      operationId: createMatchingOffer
+      parameters:
+      - in: path
+        name: tripId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/MatchingOffer
+          description: Lời mời chuyến được gửi đến tài xế phù hợp nhất tiếp theo
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: 'AC10 - Không còn tài xế phù hợp trong danh sách đề xuất;
+
+            hệ thống dừng tìm kiếm và cần thông báo cho khách hàng
+
+            '
+      security:
+      - bearerAuth: []
+      summary: Hệ thống gửi đề xuất chuyến đến tài xế (internal)
+      tags:
+      - trips
+  /trips/{tripId}/matching/offers/{offerId}/respond:
+    post:
+      description: 'FR22-FR28 - Tài xế chấp nhận hoặc từ chối lời mời chuyến; hệ thống
+
+        ghi nhận phản hồi và xác nhận tài xế nếu chấp nhận (BP02, UC09).
+
+        AC08 - Tự động mời tài xế tiếp theo ngay khi bị từ chối.
+
+        AC09 - Tự động coi là từ chối khi hết thời gian phản hồi quy định.
+
+        AC11 - Chỉ 1 tài xế được xác nhận khi có tranh chấp (2 tài xế cùng
+
+        chấp nhận gần như đồng thời) - dựa trên thời điểm ghi nhận trước.
+
+        '
+      operationId: respondToMatchingOffer
+      parameters:
+      - in: path
+        name: tripId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      - in: path
+        name: offerId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                decision:
+                  enum:
+                  - accept
+                  - reject
+                  type: string
+              required:
+              - decision
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/MatchingOffer
+          description: Phản hồi được ghi nhận
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: Lời mời đã hết hạn hoặc chuyến đã được tài xế khác nhận (AC11)
+      security:
+      - bearerAuth: []
+      summary: Tài xế phản hồi lời mời nhận chuyến
+      tags:
+      - trips
+  /trips/{tripId}/status:
+    put:
+      description: 'FR35-FR39 - Tài xế cập nhật lần lượt các mốc trạng thái: đã đến
+        điểm
+
+        đón, đã đón khách, đang di chuyển, hoàn thành chuyến (BP03, UC11).
+
+        AC12 - Hệ thống từ chối nếu cập nhật không đúng thứ tự quy định.
+
+        AC13 - Gửi thông báo cho khách hàng ngay khi tài xế đến điểm đón.
+
+        '
+      operationId: updateTripStatus
+      parameters:
+      - in: path
+        name: tripId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                status:
+                  $ref: ../components/schemas.yaml#/TripStatus
+              required:
+              - status
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/Trip
+          description: Trạng thái chuyến được cập nhật
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: AC12 - Cập nhật không đúng thứ tự trạng thái quy định
+      security:
+      - bearerAuth: []
+      summary: Tài xế cập nhật trạng thái chuyến đi
+      tags:
+      - trips
+  /trips/{tripId}/status-history:
+    get:
+      description: FR39 - Truy xuất TRIP_STATUS_LOG của một chuyến đi.
+      operationId: getTripStatusHistory
+      parameters:
+      - in: path
+        name: tripId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: ../components/schemas.yaml#/TripStatusLog
+                type: array
+          description: Danh sách lịch sử trạng thái
+      security:
+      - bearerAuth: []
+      summary: Xem lịch sử thay đổi trạng thái chuyến
+      tags:
+      - trips

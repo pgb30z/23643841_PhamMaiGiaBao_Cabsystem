@@ -1,0 +1,159 @@
+# Nhóm endpoint: fare-payment
+paths:
+  /payments/{paymentId}/callback:
+    post:
+      description: 'FR49, FR51 - Payment Provider trả kết quả giao dịch (thành công/thất
+        bại)
+
+        về hệ thống CAB (UC14).
+
+        AC19 - Nếu thất bại, hệ thống không trừ tiền và cho phép khách hàng
+
+        thử lại hoặc đổi phương thức thanh toán (FR52, FR53).
+
+        '
+      operationId: paymentProviderCallback
+      parameters:
+      - in: path
+        name: paymentId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas.yaml#/PaymentCallbackRequest
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/Payment
+          description: Kết quả giao dịch được ghi nhận
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: Không tìm thấy giao dịch tương ứng
+      summary: Webhook nhận kết quả giao dịch từ Payment Provider
+      tags:
+      - fare-payment
+  /trips/{tripId}/fare:
+    get:
+      description: 'FR43-FR45 - Hệ thống xác định và trả về số tiền khách hàng phải
+        trả
+
+        sau khi chuyến hoàn thành (BP04, UC12).
+
+        AC16 - Cước chỉ được tính sau khi Trip.status = "completed".
+
+        '
+      operationId: getTripFare
+      parameters:
+      - in: path
+        name: tripId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/Fare
+          description: Thông tin cước phí
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: AC16 - Chuyến chưa hoàn thành nên chưa có cước phí
+      security:
+      - bearerAuth: []
+      summary: Xem số tiền cước của chuyến đi
+      tags:
+      - fare-payment
+  /trips/{tripId}/payments:
+    get:
+      description: 'Bao gồm các lần thử thất bại (EX06) và giao dịch thành công cuối
+        cùng.
+
+        '
+      operationId: listTripPayments
+      parameters:
+      - in: path
+        name: tripId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: ../components/schemas.yaml#/Payment
+                type: array
+          description: Danh sách giao dịch thanh toán
+      security:
+      - bearerAuth: []
+      summary: Xem danh sách các lần giao dịch thanh toán của chuyến đi
+      tags:
+      - fare-payment
+    post:
+      description: 'FR46-FR50 - Khách hàng chọn hình thức thanh toán (tiền mặt/điện
+        tử);
+
+        nếu điện tử, hệ thống gửi yêu cầu đến Payment Provider (BP04, UC13, UC14).
+
+        RULE07/FR50 - Không lưu trực tiếp thông tin thẻ/tài khoản nhạy cảm.
+
+        AC17 - Chỉ lưu token/mã tham chiếu giao dịch.
+
+        AC18 - Không cho phép tạo giao dịch mới nếu chuyến đã có giao dịch "success".
+
+        '
+      operationId: createPayment
+      parameters:
+      - in: path
+        name: tripId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas.yaml#/CreatePaymentRequest
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/Payment
+          description: Giao dịch thanh toán được tạo/ghi nhận
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: AC18 - Chuyến đã có giao dịch thanh toán thành công
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: AC20 - Payment Provider không phản hồi trong thời gian timeout
+      security:
+      - bearerAuth: []
+      summary: Tạo giao dịch thanh toán cho chuyến đi
+      tags:
+      - fare-payment

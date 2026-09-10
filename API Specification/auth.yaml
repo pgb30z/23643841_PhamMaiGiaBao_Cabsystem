@@ -1,0 +1,82 @@
+# Nhóm endpoint: auth
+paths:
+  /auth/login:
+    post:
+      description: 'FR03, FR04 - Xác thực người dùng (Customer, Driver, Operation
+        Staff) và cấp
+
+        quyền truy cập tương ứng với vai trò.
+
+        AC03 - Đăng nhập thành công khi thông tin đúng và tài khoản active.
+
+        '
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas.yaml#/LoginRequest
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/AuthResponse
+          description: Đăng nhập thành công
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: Sai thông tin đăng nhập
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: Tài khoản không hợp lệ / bị khóa
+      summary: Đăng nhập
+      tags:
+      - auth
+  /auth/register:
+    post:
+      description: 'FR01, FR02 - Cho phép khách hàng đăng ký tài khoản, hoặc tài xế
+        tự đăng ký/
+
+        được nhân viên vận hành tạo tài khoản.
+
+        AC01 - Đăng ký thành công khi thông tin hợp lệ và chưa tồn tại.
+
+        AC02 - Từ chối khi số điện thoại/email đã tồn tại.
+
+        '
+      operationId: registerAccount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas.yaml#/RegisterRequest
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/AuthResponse
+          description: Tài khoản được tạo thành công
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: Thông tin đăng ký không hợp lệ
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: Tài khoản (số điện thoại/email) đã tồn tại
+      summary: Đăng ký tài khoản (Customer hoặc Driver)
+      tags:
+      - auth

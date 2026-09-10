@@ -1,0 +1,71 @@
+# Nhóm endpoint: audit
+paths:
+  /audit-logs:
+    get:
+      description: 'FR88-FR90 - Truy vết các thao tác quan trọng đã thực hiện trong
+        hệ
+
+        thống, phục vụ kiểm tra khi có sự cố (RULE10, BR19).
+
+        AC28 - Mỗi bản ghi log gồm người thực hiện, hành động, đối tượng và thời gian.
+
+        '
+      operationId: listAuditLogs
+      parameters:
+      - in: query
+        name: operatorId
+        required: false
+        schema:
+          format: uuid
+          type: string
+      - in: query
+        name: targetEntity
+        required: false
+        schema:
+          example: TRIP
+          type: string
+      - in: query
+        name: fromDate
+        required: false
+        schema:
+          format: date
+          type: string
+      - in: query
+        name: toDate
+        required: false
+        schema:
+          format: date
+          type: string
+      - in: query
+        name: skip
+        required: false
+        schema:
+          minimum: 0
+          type: integer
+      - in: query
+        name: limit
+        required: false
+        schema:
+          maximum: 50
+          minimum: 0
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: ../components/schemas.yaml#/AuditLog
+                type: array
+          description: Danh sách nhật ký thao tác
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: Không có quyền tra cứu audit log
+      security:
+      - bearerAuth: []
+      summary: Tra cứu nhật ký thao tác (Audit Log)
+      tags:
+      - audit

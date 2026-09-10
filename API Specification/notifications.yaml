@@ -1,0 +1,65 @@
+# Nhóm endpoint: notifications
+paths:
+  /notifications:
+    get:
+      description: FR54-FR60 - Khách hàng/tài xế xem các thông báo đã nhận.
+      operationId: listMyNotifications
+      parameters:
+      - in: query
+        name: skip
+        required: false
+        schema:
+          minimum: 0
+          type: integer
+      - in: query
+        name: limit
+        required: false
+        schema:
+          maximum: 50
+          minimum: 0
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: ../components/schemas.yaml#/Notification
+                type: array
+          description: Danh sách thông báo
+      security:
+      - bearerAuth: []
+      summary: Xem danh sách thông báo của người dùng hiện tại
+      tags:
+      - notifications
+  /notifications/dispatch:
+    post:
+      description: 'FR54-FR61 - Gửi thông báo khi có sự kiện phát sinh (yêu cầu tiếp
+        nhận,
+
+        tài xế nhận chuyến, đến điểm đón, hoàn thành, kết quả thanh toán...).
+
+        AC21 - Gửi đúng và đủ một thông báo cho đúng người nhận, không trùng lặp.
+
+        AC22 - Tự động thử gửi lại khi thất bại, không ảnh hưởng luồng nghiệp vụ chính.
+
+        '
+      operationId: dispatchNotification
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas.yaml#/DispatchNotificationRequest
+        required: true
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/Notification
+          description: Yêu cầu gửi thông báo được tiếp nhận (xử lý bất đồng bộ)
+      security:
+      - bearerAuth: []
+      summary: Hệ thống gửi thông báo (internal, gọi bởi các module nghiệp vụ khác)
+      tags:
+      - notifications

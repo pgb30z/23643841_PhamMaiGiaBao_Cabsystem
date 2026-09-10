@@ -1,0 +1,39 @@
+# Nhóm endpoint: reports
+paths:
+  /reports/operations:
+    get:
+      description: 'FR78-FR82 - Báo cáo số lượng chuyến, doanh thu, tỷ lệ hoàn thành,
+
+        tỷ lệ hủy và hiệu quả hoạt động của tài xế (UC23).
+
+        AC29 - Số liệu báo cáo phải khớp với dữ liệu thực tế trong khoảng
+
+        thời gian được chọn.
+
+        '
+      operationId: getOperationsReport
+      parameters:
+      - in: query
+        name: fromDate
+        required: true
+        schema:
+          format: date
+          type: string
+      - in: query
+        name: toDate
+        required: true
+        schema:
+          format: date
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/OperationsReport
+          description: Báo cáo vận hành cho khoảng thời gian được chọn
+      security:
+      - bearerAuth: []
+      summary: Xem báo cáo vận hành
+      tags:
+      - reports

@@ -1,0 +1,51 @@
+# Nhóm endpoint: customers
+paths:
+  /customers/me:
+    get:
+      description: FR05 - Khách hàng xem thông tin cá nhân đã đăng ký.
+      operationId: getMyCustomerProfile
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/Customer
+          description: Thông tin khách hàng
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: Chưa xác thực
+      security:
+      - bearerAuth: []
+      summary: Xem thông tin cá nhân khách hàng
+      tags:
+      - customers
+    put:
+      description: FR05 - Cho phép khách hàng cập nhật thông tin cá nhân.
+      operationId: updateMyCustomerProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas.yaml#/CustomerUpdateRequest
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/Customer
+          description: Thông tin được cập nhật
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas.yaml#/ErrorResponse
+          description: Thông tin không hợp lệ
+      security:
+      - bearerAuth: []
+      summary: Cập nhật thông tin cá nhân khách hàng
+      tags:
+      - customers
